@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View, ViewStyle, StyleProp, Platform, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Gradients, Spacing } from '@/theme';
 import { GlowBackground } from './GlowBackground';
@@ -34,7 +33,6 @@ export function Screen({
     <View style={[styles.root, webBound]}>
       <LinearGradient colors={Gradients.screen} style={StyleSheet.absoluteFill} />
       {!flat && <GlowBackground />}
-      <StatusBar style="light" />
       <SafeAreaView style={styles.safe} edges={edges}>
         {scroll ? (
           <ScrollView

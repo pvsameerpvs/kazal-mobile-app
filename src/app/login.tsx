@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View, StyleSheet, Pressable, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,7 +18,6 @@ export default function Login() {
     <View style={styles.root}>
       <LinearGradient colors={Gradients.screen} style={StyleSheet.absoluteFill} />
       <GlowBackground />
-      <StatusBar style="light" />
       <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
         <View style={styles.grabber} />
         <Pressable style={styles.close} hitSlop={10} onPress={() => router.back()}>
@@ -133,7 +131,7 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: Colors.bg },
   safe: { flex: 1, paddingHorizontal: Spacing.xl },
   grabber: { width: 40, height: 4, borderRadius: 2, backgroundColor: Colors.glassHairline, alignSelf: 'center', marginTop: Spacing.sm },
-  close: { position: 'absolute', top: Spacing.lg, right: Spacing.xl, width: 36, height: 36, borderRadius: 18, backgroundColor: Colors.glassStrong, alignItems: 'center', justifyContent: 'center', zIndex: 2 },
+  close: { position: 'absolute', top: Spacing.sm, right: Spacing.xl, width: 36, height: 36, borderRadius: 18, backgroundColor: Colors.glassStrong, alignItems: 'center', justifyContent: 'center', zIndex: 2 },
   body: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   lockRing: {
     width: 100,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Colors, Radius, Spacing } from '@/theme';
@@ -24,6 +24,8 @@ const contacts: Contact[] = [
 
 export default function ContactScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const cardWidth = (width - Spacing.xl * 2 - Spacing.md) / 2;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -41,7 +43,7 @@ export default function ContactScreen() {
       {/* Quick contact grid */}
       <View style={styles.grid}>
         {contacts.map((c) => (
-          <GlassCard key={c.id} accent={c.accent} onPress={() => {}} style={styles.contactCard}>
+          <GlassCard key={c.id} accent={c.accent} onPress={() => {}} style={[styles.contactCard, { width: cardWidth }]}>
             <View style={styles.contactRow}>
               <View style={[styles.contactIcon, { borderColor: c.color + '55', backgroundColor: c.color + '1A' }]}>
                 <Ionicons name={c.icon} size={20} color={c.color} />
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   underline: { width: 48, height: 3, borderRadius: 3, backgroundColor: Colors.cyan, marginTop: Spacing.md, marginBottom: Spacing.xl },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.md },
-  contactCard: { width: '47.8%' },
+  contactCard: {},
   contactRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.md },
   contactIcon: {
     width: 42,

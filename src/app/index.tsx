@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Gradients, Spacing } from '@/theme';
 import { GlowBackground, Logo, Skyline, Txt } from '@/components';
@@ -10,6 +10,7 @@ import { company } from '@/data/mock';
 
 export default function Splash() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const fade = useRef(new Animated.Value(0)).current;
   const rise = useRef(new Animated.Value(20)).current;
   const scale = useRef(new Animated.Value(0.9)).current;
@@ -31,7 +32,6 @@ export default function Splash() {
       <LinearGradient colors={Gradients.screen} style={StyleSheet.absoluteFill} />
       <GlowBackground />
       <Skyline height={200} opacity={0.45} />
-      <StatusBar style="light" />
 
       <Animated.View style={[styles.center, { opacity: fade, transform: [{ translateY: rise }] }]}>
         <Animated.View style={[styles.logoRing, { transform: [{ scale }] }]}>
@@ -46,7 +46,7 @@ export default function Splash() {
         </Txt>
       </Animated.View>
 
-      <Animated.View style={[styles.footer, { opacity: fade }]}>
+      <Animated.View style={[styles.footer, { bottom: Math.max(insets.bottom, 56), opacity: fade }]}>
         <View style={styles.trustRow}>
           <Ionicons name="sparkles-outline" size={14} color={Colors.cyan} />
           <Txt variant="caption" style={{ color: Colors.cyan, letterSpacing: 0.5 }}>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
   },
   tagline: { color: Colors.textSecondary, textAlign: 'center', fontSize: 13 },
-  footer: { position: 'absolute', bottom: 56, alignItems: 'center', gap: Spacing.md },
+  footer: { position: 'absolute', alignItems: 'center', gap: Spacing.md },
   trustRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   tap: { color: Colors.textMuted, letterSpacing: 1 },
 });

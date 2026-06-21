@@ -41,3 +41,7 @@ example
 # generated native folders
 /ios
 /android
+
+# Agent instructions — never commit to remote
+AGENTS.md
+CLAUDE.md

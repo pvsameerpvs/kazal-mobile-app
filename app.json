@@ -1,12 +1,13 @@
 {
   "expo": {
     "name": "Kazal",
-    "slug": "Kazal",
+    "slug": "kazal",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "kazal",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#05080F",
     "ios": {
       "icon": "./assets/expo.icon"
     },
@@ -28,10 +29,11 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#05080F",
           "android": {
             "image": "./assets/images/splash-icon.png",
-            "imageWidth": 76
+            "imageWidth": 120,
+            "backgroundColor": "#05080F"
           }
         }
       ]
@@ -39,6 +41,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "9e972240-a214-4905-ab63-77a1c2443d00"
+      }
+    },
+    "owner": "irshadpcind"
   }
 }

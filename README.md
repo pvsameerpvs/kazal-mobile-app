@@ -1,56 +1,65 @@
-# Welcome to your Expo app 👋
+# Prime Capital Advisory — Commercial Finance Advisory (UI Prototype)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> Working repo name: **Kazal**. Brand shown in-app: **Prime Capital Advisory**
+> ("Connecting Capital with Opportunity").
 
-## Get started
+A premium, dark-themed mobile app UI for a commercial finance advisory business
+serving the GCC (UAE, Saudi Arabia, Qatar, Oman).
 
-1. Install dependencies
+> **Design phase only.** This is a static, presentation-ready prototype. All data
+> is mock/placeholder. There is no backend, database, authentication, or API
+> integration — that comes in a later development phase.
 
-   ```bash
-   npm install
-   ```
+Built with **Expo (SDK 56)**, **Expo Router**, **TypeScript**, `react-native-svg`,
+`expo-linear-gradient`, and `expo-blur`.
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Run it
 
 ```bash
-npm run reset-project
+npm install        # already done if you cloned with node_modules
+npx expo start     # then press "i" for iOS simulator or scan the QR with Expo Go
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- iOS simulator: press `i`
+- Android emulator: press `a`
+- Physical device: install **Expo Go** and scan the QR code
 
-### Other setup steps
+## Screens
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+| Screen | Route |
+| --- | --- |
+| Splash | `src/app/index.tsx` |
+| Home | `src/app/(tabs)/home.tsx` |
+| Services | `src/app/(tabs)/services.tsx` |
+| Service Detail | `src/app/service/[id].tsx` |
+| Opportunities | `src/app/(tabs)/opportunities.tsx` |
+| Opportunity Detail | `src/app/opportunity/[id].tsx` |
+| Contact / Inquiry | `src/app/contact.tsx` |
+| Chat List | `src/app/(tabs)/chat.tsx` |
+| Chat Detail | `src/app/chat/[id].tsx` |
+| Login Required | `src/app/login.tsx` (modal) |
+| Profile / About | `src/app/(tabs)/profile.tsx` |
 
-## Learn more
+Bottom navigation: **Home · Services · Deals · Chat · Profile**
+(custom glass floating bar in `src/app/(tabs)/_layout.tsx`).
 
-To learn more about developing your project with Expo, look at the following resources:
+## Design system
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Everything is tokenised in `src/theme/index.ts`:
 
-## Join the community
+- **Background** — deep navy / near-black (`#05080F`) with ambient cyan/blue glows
+- **Accents** — electric cyan (`#2BD2FF`), deep blue (`#1C7DF0`), teal (`#27E0C8`)
+- **Status** — green (Available), amber (In Discussion)
+- **Surfaces** — soft glassmorphism cards with hairline borders and subtle glow
+- **Type** — clean system sans-serif with a bold hero → body → label hierarchy
 
-Join our community of developers creating universal apps.
+Reusable UI lives in `src/components/` (Screen, GlassCard, Logo, Button, Chip,
+StatusBadge, cards, etc.). Mock content lives in `src/data/mock.ts`.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Notes for the next phase
+
+- The hero, office, and login panels use a vector **skyline** motif. To use a real
+  advisor/skyline photo, drop an `<Image>` into the hero block in `home.tsx`.
+- Login is intentionally only triggered when a user **inquires** or **chats**.
+- All forms and the "send" / "submit" actions are static placeholders.
+# kazal-mobile-app

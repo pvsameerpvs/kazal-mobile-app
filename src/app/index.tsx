@@ -1,98 +1,98 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useEffect, useRef } from 'react';
+import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { Colors, Gradients, Spacing } from '@/theme';
+import { GlowBackground, Logo, Skyline, Txt } from '@/components';
+import { company } from '@/data/mock';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+export default function Splash() {
+  const router = useRouter();
+  const fade = useRef(new Animated.Value(0)).current;
+  const rise = useRef(new Animated.Value(20)).current;
+  const scale = useRef(new Animated.Value(0.9)).current;
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+  const enter = () => router.replace('/(tabs)/home');
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fade, { toValue: 1, duration: 900, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+      Animated.timing(rise, { toValue: 0, duration: 900, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+      Animated.spring(scale, { toValue: 1, friction: 6, tension: 40, useNativeDriver: true }),
+    ]).start();
+    const t = setTimeout(enter, 2600);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+    <Pressable style={styles.root} onPress={enter}>
+      <LinearGradient colors={Gradients.screen} style={StyleSheet.absoluteFill} />
+      <GlowBackground />
+      <Skyline height={200} opacity={0.45} />
+      <StatusBar style="light" />
 
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+      <Animated.View style={[styles.center, { opacity: fade, transform: [{ translateY: rise }] }]}>
+        <Animated.View style={[styles.logoRing, { transform: [{ scale }] }]}>
+          <Logo size={80} />
+        </Animated.View>
+        <Txt variant="h1" style={styles.name}>
+          {company.name}
+        </Txt>
+        <View style={styles.divider} />
+        <Txt variant="body" style={styles.tagline}>
+          {company.tagline}
+        </Txt>
+      </Animated.View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      <Animated.View style={[styles.footer, { opacity: fade }]}>
+        <View style={styles.trustRow}>
+          <Ionicons name="sparkles-outline" size={14} color={Colors.cyan} />
+          <Txt variant="caption" style={{ color: Colors.cyan, letterSpacing: 0.5 }}>
+            {company.slogan}
+          </Txt>
+        </View>
+        <Txt variant="caption" style={styles.tap}>
+          Tap to continue
+        </Txt>
+      </Animated.View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
+  root: { flex: 1, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
+  center: { alignItems: 'center', paddingHorizontal: Spacing.xl },
+  logoRing: {
+    width: 132,
+    height: 132,
+    borderRadius: 66,
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: Colors.borderAccent,
+    backgroundColor: 'rgba(43,210,255,0.04)',
+    marginBottom: Spacing.xxl,
+    shadowColor: Colors.glowCyan,
+    shadowOpacity: 0.6,
+    shadowRadius: 30,
+    shadowOffset: { width: 0, height: 0 },
   },
-  title: {
-    textAlign: 'center',
+  name: { letterSpacing: 0.5, textAlign: 'center', fontSize: 30 },
+  divider: {
+    width: 54,
+    height: 3,
+    borderRadius: 3,
+    backgroundColor: Colors.cyan,
+    marginVertical: Spacing.lg,
+    shadowColor: Colors.glowCyan,
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 0 },
   },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
+  tagline: { color: Colors.textSecondary, textAlign: 'center', fontSize: 13 },
+  footer: { position: 'absolute', bottom: 56, alignItems: 'center', gap: Spacing.md },
+  trustRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  tap: { color: Colors.textMuted, letterSpacing: 1 },
 });

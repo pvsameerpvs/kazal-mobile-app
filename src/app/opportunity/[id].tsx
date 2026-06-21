@@ -59,12 +59,16 @@ export default function OpportunityDetail() {
 
       {/* CTAs */}
       <View style={styles.ctas}>
-        <Button label="Inquire Now" icon="document-text-outline" onPress={() => router.push('/login')} />
+        <Button
+          label="Inquire Now"
+          icon="document-text-outline"
+          onPress={() => router.push({ pathname: '/login', params: { context: 'opportunity', id: opp.id, label: opp.title } })}
+        />
         <Button
           label="Chat About This"
           variant="secondary"
           icon="chatbubble-ellipses-outline"
-          onPress={() => router.push('/login')}
+          onPress={() => router.push({ pathname: '/login', params: { context: 'opportunity', id: opp.id, label: opp.title } })}
         />
       </View>
     </Screen>

@@ -91,12 +91,16 @@ export default function ServiceDetail() {
 
       {/* CTAs */}
       <View style={styles.ctas}>
-        <Button label="Inquire Now" icon="document-text-outline" onPress={() => router.push('/login')} />
+        <Button
+          label="Inquire Now"
+          icon="document-text-outline"
+          onPress={() => router.push({ pathname: '/login', params: { context: 'service', id: service.id, label: service.title } })}
+        />
         <Button
           label="Chat About This"
           variant="secondary"
           icon="chatbubble-ellipses-outline"
-          onPress={() => router.push('/login')}
+          onPress={() => router.push({ pathname: '/login', params: { context: 'service', id: service.id, label: service.title } })}
         />
       </View>
     </Screen>

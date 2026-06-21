@@ -1,3 +1,9 @@
+export type ChatContext = {
+  type: 'service' | 'opportunity';
+  id: string;
+  label: string;
+};
+
 export type ChatThread = {
   id: string;
   name: string;
@@ -6,6 +12,7 @@ export type ChatThread = {
   time: string;
   unread: number;
   online: boolean;
+  context?: ChatContext;
 };
 
 export type ChatMessage = {
@@ -14,4 +21,5 @@ export type ChatMessage = {
   text?: string;
   time: string;
   file?: { name: string; size: string };
+  replyTo?: { text: string; from: string };
 };

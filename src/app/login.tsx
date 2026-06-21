@@ -1,18 +1,38 @@
-import { useState } from 'react';
-import { View, StyleSheet, Pressable, TextInput } from 'react-native';
+import { useMemo, useState } from 'react';
+import { View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Gradients, Radius, Spacing, Type } from '@/theme';
-import { GlowBackground, Button, Logo, Txt } from '@/components';
+import { GlowBackground, Logo, Txt } from '@/components';
+import { findThreadByContext } from '@/data/mock';
 
 export default function Login() {
   const router = useRouter();
-  const [method, setMethod] = useState<'phone' | 'email'>('phone');
-  const [value, setValue] = useState('');
+  const params = useLocalSearchParams<{ context?: string; id?: string; label?: string }>();
+  const [loading, setLoading] = useState(false);
 
-  const proceed = () => router.replace('/(tabs)/chat');
+  const contextLabel = useMemo(() => {
+    if (params.context === 'service' && params.label) return params.label;
+    if (params.context === 'opportunity' && params.label) return params.label;
+    return null;
+  }, [params]);
+
+  const navigate = useMemo(() => {
+    if (params.context && params.id) {
+      const thread = findThreadByContext({ type: params.context as 'service' | 'opportunity', id: params.id, label: params.label ?? '' });
+      if (thread) return () => router.replace({ pathname: '/chat/[id]', params: { id: thread.id } });
+    }
+    return () => router.replace('/(tabs)/chat');
+  }, [params.context, params.id, params.label]);
+
+  const signInWithGoogle = () => {
+    setLoading(true);
+    setTimeout(() => {
+      navigate();
+    }, 1200);
+  };
 
   return (
     <View style={styles.root}>
@@ -35,65 +55,56 @@ export default function Login() {
             </View>
           </View>
 
-          <Txt variant="h1" style={styles.title}>
-            Secure Access
-          </Txt>
+          {contextLabel ? (
+            <>
+              <Txt variant="caption" style={styles.contextTag}>
+                Inquiring about
+              </Txt>
+              <Txt variant="h1" style={styles.title}>
+                {contextLabel}
+              </Txt>
+            </>
+          ) : (
+            <Txt variant="h1" style={styles.title}>
+              Secure Access
+            </Txt>
+          )}
           <Txt variant="body" style={styles.subtitle}>
-            Sign in to inquire and chat securely with our advisory team. It only takes a moment.
+            Sign in to connect securely with our advisory team.
           </Txt>
 
-          {/* Method toggle */}
-          <View style={styles.toggle}>
-            <ToggleBtn label="Phone" icon="call-outline" active={method === 'phone'} onPress={() => setMethod('phone')} />
-            <ToggleBtn label="Email" icon="mail-outline" active={method === 'email'} onPress={() => setMethod('email')} />
+          {/* Google Sign In */}
+          <Pressable
+            style={({ pressed }) => [styles.googleBtn, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
+            disabled={loading}
+            onPress={signInWithGoogle}
+          >
+            <View style={styles.googleInner}>
+              {loading ? (
+                <ActivityIndicator size="small" color={Colors.white} />
+              ) : (
+                <>
+                  <Ionicons name="logo-google" size={20} color={Colors.white} />
+                  <Txt style={[Type.bodyStrong, { color: Colors.white, fontSize: 15 }]}>Continue with Google</Txt>
+                </>
+              )}
+            </View>
+          </Pressable>
+
+          {/* Divider */}
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Txt variant="caption" style={{ color: Colors.textMuted, marginHorizontal: Spacing.md }}>
+              secured
+            </Txt>
+            <View style={styles.dividerLine} />
           </View>
 
-          {/* Input */}
-          {method === 'phone' ? (
-            <View style={styles.inputRow}>
-              <View style={styles.prefix}>
-                <Txt variant="bodyStrong">🇦🇪 +971</Txt>
-              </View>
-              <TextInput
-                value={value}
-                onChangeText={setValue}
-                placeholder="50 123 4567"
-                placeholderTextColor={Colors.textMuted}
-                keyboardType="phone-pad"
-                style={styles.input}
-                selectionColor={Colors.cyan}
-              />
-            </View>
-          ) : (
-            <View style={styles.inputRow}>
-              <View style={styles.inlineIcon}>
-                <Ionicons name="mail-outline" size={18} color={Colors.textMuted} />
-              </View>
-              <TextInput
-                value={value}
-                onChangeText={setValue}
-                placeholder="you@company.com"
-                placeholderTextColor={Colors.textMuted}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={styles.input}
-                selectionColor={Colors.cyan}
-              />
-            </View>
-          )}
-
-          <Button
-            label={method === 'phone' ? 'Send OTP Code' : 'Continue with Email'}
-            trailingIcon="arrow-forward"
-            onPress={proceed}
-            style={styles.cta}
-          />
-
-          {/* Reassurance */}
+          {/* Trust note */}
           <View style={styles.reassure}>
             <Ionicons name="shield-checkmark" size={15} color={Colors.cyan} />
             <Txt variant="caption" style={{ color: Colors.textSecondary, flex: 1 }}>
-              Your details are encrypted, verified and never shared. We will send a one-time code to confirm it is you.
+              We only use your Google account to verify your identity. No data is shared without your consent.
             </Txt>
           </View>
         </View>
@@ -103,27 +114,6 @@ export default function Login() {
         </Txt>
       </SafeAreaView>
     </View>
-  );
-}
-
-function ToggleBtn({
-  label,
-  icon,
-  active,
-  onPress,
-}: {
-  label: string;
-  icon: keyof typeof Ionicons.glyphMap;
-  active: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable style={[styles.toggleBtn, active && styles.toggleActive]} onPress={onPress}>
-      <Ionicons name={icon} size={16} color={active ? Colors.cyan : Colors.textMuted} />
-      <Txt variant="bodyStrong" style={{ color: active ? Colors.text : Colors.textMuted, fontSize: 14 }}>
-        {label}
-      </Txt>
-    </Pressable>
   );
 }
 
@@ -161,43 +151,33 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.bg,
   },
-  title: { marginTop: Spacing.xxl },
+  contextTag: { color: Colors.cyan, letterSpacing: 0.5, marginBottom: 4 },
+  title: { marginTop: Spacing.xxl, textAlign: 'center' },
   subtitle: { textAlign: 'center', marginTop: Spacing.md, maxWidth: 320 },
-  toggle: {
-    flexDirection: 'row',
-    gap: Spacing.sm,
+  googleBtn: {
+    alignSelf: 'stretch',
     marginTop: Spacing.xxl,
-    padding: 4,
-    borderRadius: Radius.md,
-    backgroundColor: Colors.glass,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: Colors.border,
-    alignSelf: 'stretch',
-  },
-  toggleBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 44, borderRadius: Radius.sm },
-  toggleActive: { backgroundColor: Colors.glassStrong, borderWidth: StyleSheet.hairlineWidth, borderColor: Colors.borderAccent },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    marginTop: Spacing.lg,
     height: 54,
     borderRadius: Radius.md,
-    backgroundColor: Colors.glass,
+    backgroundColor: Colors.glassStrong,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: Colors.border,
+    borderColor: Colors.borderAccent,
     overflow: 'hidden',
   },
-  prefix: {
-    paddingHorizontal: Spacing.lg,
-    height: '100%',
+  googleInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    borderRightWidth: StyleSheet.hairlineWidth,
-    borderRightColor: Colors.border,
+    gap: Spacing.sm,
+    height: 54,
   },
-  inlineIcon: { paddingLeft: Spacing.lg },
-  input: { flex: 1, color: Colors.text, ...Type.body, fontSize: 16, paddingHorizontal: Spacing.lg },
-  cta: { marginTop: Spacing.lg, alignSelf: 'stretch' },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: Spacing.lg,
+    alignSelf: 'stretch',
+  },
+  dividerLine: { flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: Colors.border },
   reassure: {
     flexDirection: 'row',
     alignItems: 'center',

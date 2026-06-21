@@ -1,4 +1,4 @@
-import type { IconRef, Service, Opportunity, OppTag, ChatThread, ChatMessage, Company, Profile } from '@/types';
+import type { IconRef, Service, Opportunity, OppTag, ChatThread, ChatMessage, ChatContext, Company, Profile } from '@/types';
 
 export const company: Company = {
   name: 'Prime Capital Advisory',
@@ -189,22 +189,74 @@ export const opportunities: Opportunity[] = [
 
 export const chatThreads: ChatThread[] = [
   {
-    id: 'th-trade',
-    name: 'Trade Finance Inquiry',
-    desk: 'Advisory Desk',
-    preview: 'Thank you. Please confirm the commission as well.',
-    time: '10:34 AM',
+    id: 'th-lc',
+    name: 'Letter of Credit',
+    desk: 'Trade Finance Desk',
+    preview: 'Thank you for your interest. How can we assist with your LC?',
+    time: 'Just now',
     unread: 1,
     online: true,
+    context: { type: 'service', id: 'letter-of-credit', label: 'Letter of Credit' },
+  },
+  {
+    id: 'th-bg',
+    name: 'Bank Guarantee',
+    desk: 'Guarantees Desk',
+    preview: 'We can issue bid and performance bonds swiftly.',
+    time: '10:45 AM',
+    unread: 0,
+    online: true,
+    context: { type: 'service', id: 'bank-guarantee', label: 'Bank Guarantee' },
+  },
+  {
+    id: 'th-sblc',
+    name: 'Standby LC',
+    desk: 'Structured Finance',
+    preview: 'Your standby LC inquiry has been received.',
+    time: 'Yesterday',
+    unread: 0,
+    online: true,
+    context: { type: 'service', id: 'standby-lc', label: 'Standby LC' },
   },
   {
     id: 'th-bonds',
-    name: 'Bonds Advisory',
+    name: 'Government Bonds',
     desk: 'Capital Markets',
     preview: 'The sovereign bond allocation can be reserved for you.',
     time: 'Yesterday',
     unread: 0,
     online: true,
+    context: { type: 'service', id: 'government-bonds', label: 'Government Bonds' },
+  },
+  {
+    id: 'th-loans',
+    name: 'Commercial Loans',
+    desk: 'Lending Desk',
+    preview: 'We have competitive rates for your requirements.',
+    time: '2:15 PM',
+    unread: 2,
+    online: true,
+    context: { type: 'service', id: 'commercial-loans', label: 'Commercial Loans' },
+  },
+  {
+    id: 'th-trade',
+    name: 'Trade Finance',
+    desk: 'Trade Finance Desk',
+    preview: 'Your trade finance options have been reviewed.',
+    time: 'Mon',
+    unread: 0,
+    online: false,
+    context: { type: 'service', id: 'trade-finance', label: 'Trade Finance' },
+  },
+  {
+    id: 'th-credit',
+    name: 'Credit Solutions',
+    desk: 'Credit Advisory',
+    preview: 'Your credit line options are ready for review.',
+    time: 'Tue',
+    unread: 0,
+    online: false,
+    context: { type: 'service', id: 'credit-solutions', label: 'Credit Solutions' },
   },
   {
     id: 'th-support',
@@ -217,12 +269,51 @@ export const chatThreads: ChatThread[] = [
   },
 ];
 
-export const chatMessages: ChatMessage[] = [
-  { id: 'm1', from: 'me', text: 'Hi, I am interested in the LC – USD 5M. Please share more details.', time: '10:30 AM' },
-  { id: 'm2', from: 'advisor', text: 'Hello! Sure, I will share the details with you.', time: '10:32 AM' },
-  { id: 'm3', from: 'advisor', file: { name: 'LC_Details.pdf', size: '1.4 MB' }, time: '10:33 AM' },
-  { id: 'm4', from: 'me', text: 'Thank you. Please confirm the commission as well.', time: '10:34 AM' },
-];
+const threadMessages: Record<string, ChatMessage[]> = {
+  'th-lc': [
+    { id: 'mlc1', from: 'me', text: 'Hi, I am interested in your Letter of Credit services. Can you share more details?', time: '10:30 AM' },
+    { id: 'mlc2', from: 'advisor', text: 'Of course. We offer sight and usance LC solutions with a trusted GCC banking network. What is your trade corridor?', time: '10:32 AM' },
+  ],
+  'th-bg': [
+    { id: 'mbg1', from: 'me', text: 'I need a bank guarantee for an infrastructure contract.', time: '9:15 AM' },
+    { id: 'mbg2', from: 'advisor', text: 'We can help with bid, performance, and advance payment bonds. What is the contract value?', time: '9:18 AM' },
+  ],
+  'th-sblc': [
+    { id: 'msb1', from: 'me', text: 'Looking for a standby LC for a long-term agreement.', time: '3:00 PM' },
+    { id: 'msb2', from: 'advisor', text: 'Standby LCs are ideal for large contracts. Let us know the tenor and amount you need.', time: '3:05 PM' },
+  ],
+  'th-bonds': [
+    { id: 'mbd1', from: 'me', text: 'I am interested in the sovereign bond allocation.', time: '11:20 AM' },
+    { id: 'mbd2', from: 'advisor', text: 'The sovereign bond allocation can be reserved for you. Please share your investment preferences.', time: '11:25 AM' },
+    { id: 'mbd3', from: 'advisor', file: { name: 'Bond_Allocation.pdf', size: '890 KB' }, time: '11:26 AM' },
+  ],
+  'th-loans': [
+    { id: 'mln1', from: 'me', text: 'We are looking for working capital funding of USD 5M.', time: '2:10 PM' },
+    { id: 'mln2', from: 'advisor', text: 'We can structure a commercial loan to match your cash flow. What is your repayment timeline?', time: '2:12 PM' },
+    { id: 'mln3', from: 'advisor', file: { name: 'Loan_Options.pdf', size: '1.1 MB' }, time: '2:14 PM' },
+  ],
+  'th-trade': [
+    { id: 'mtr1', from: 'me', text: 'We need trade finance for our import operations.', time: 'Mon' },
+    { id: 'mtr2', from: 'advisor', text: 'We offer import and export financing with multi-currency support. Let me review your requirements.', time: 'Mon' },
+  ],
+  'th-credit': [
+    { id: 'mcr1', from: 'me', text: 'We need a revolving credit facility.', time: 'Tue' },
+    { id: 'mcr2', from: 'advisor', text: 'We can arrange a flexible credit line. What is your expected monthly volume?', time: 'Tue' },
+  ],
+  'th-support': [
+    { id: 'msu1', from: 'advisor', text: 'Welcome to Prime Capital Advisory. How can we help you today?', time: 'Mon' },
+  ],
+};
+
+export function getThreadMessages(threadId: string): ChatMessage[] {
+  return threadMessages[threadId] ?? threadMessages['th-support'] ?? [];
+}
+
+export function findThreadByContext(context: ChatContext): ChatThread | undefined {
+  return chatThreads.find(
+    (t) => t.context?.type === context.type && t.context?.id === context.id,
+  );
+}
 
 export const profile: Profile = {
   name: 'Prime Capital Advisory',

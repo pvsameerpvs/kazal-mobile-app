@@ -28,7 +28,7 @@ export default function Splash() {
   }, [enter, fade, rise, scale]);
 
   return (
-    <Pressable style={styles.root} onPress={enter}>
+    <Pressable style={[styles.root, { paddingTop: insets.top }]} onPress={enter}>
       <LinearGradient colors={Gradients.screen} style={StyleSheet.absoluteFill} />
       <GlowBackground />
       <Skyline height={200} opacity={0.45} />

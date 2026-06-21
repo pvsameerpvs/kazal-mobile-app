@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
@@ -15,7 +15,7 @@ export default function Splash() {
   const rise = useRef(new Animated.Value(20)).current;
   const scale = useRef(new Animated.Value(0.9)).current;
 
-  const enter = () => router.replace('/(tabs)/home');
+  const enter = useCallback(() => router.replace('/(tabs)/home'), [router]);
 
   useEffect(() => {
     Animated.parallel([
@@ -25,7 +25,7 @@ export default function Splash() {
     ]).start();
     const t = setTimeout(enter, 2600);
     return () => clearTimeout(t);
-  }, []);
+  }, [enter, fade, rise, scale]);
 
   return (
     <Pressable style={styles.root} onPress={enter}>

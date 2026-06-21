@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import Svg, { Defs, LinearGradient, Stop, Path } from 'react-native-svg';
 import { Colors, glow } from '@/theme';
 

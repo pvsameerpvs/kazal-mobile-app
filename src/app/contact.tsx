@@ -80,7 +80,7 @@ export default function ContactScreen() {
       <GlassCard style={styles.form}>
         <Txt variant="h3">Send us an Inquiry</Txt>
         <Txt variant="body" style={{ marginTop: 4, marginBottom: Spacing.lg }}>
-          Fill out the form and we'll get back to you shortly.
+          Fill out the form and we will get back to you shortly.
         </Txt>
         <View style={styles.fields}>
           <Field icon="person-outline" placeholder="Your name" value={name} onChangeText={setName} />

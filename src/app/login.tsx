@@ -93,7 +93,7 @@ export default function Login() {
           <View style={styles.reassure}>
             <Ionicons name="shield-checkmark" size={15} color={Colors.cyan} />
             <Txt variant="caption" style={{ color: Colors.textSecondary, flex: 1 }}>
-              Your details are encrypted, verified and never shared. We'll send a one-time code to confirm it's you.
+              Your details are encrypted, verified and never shared. We will send a one-time code to confirm it is you.
             </Txt>
           </View>
         </View>

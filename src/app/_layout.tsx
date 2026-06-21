@@ -1,4 +1,5 @@
-import { DarkTheme, ThemeProvider as NavThemeProvider, Stack } from 'expo-router';
+import { DarkTheme, ThemeProvider as NavThemeProvider } from '@react-navigation/native';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

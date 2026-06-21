@@ -1,7 +1,7 @@
 import { View, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, Radius, Spacing } from '@/theme';
+import { Colors, Spacing } from '@/theme';
 import { Screen, ScreenTitle, GlassCard, Button, Txt } from '@/components';
 import { chatThreads } from '@/data/mock';
 

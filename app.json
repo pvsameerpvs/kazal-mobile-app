@@ -9,9 +9,11 @@
     "userInterfaceStyle": "dark",
     "backgroundColor": "#05080F",
     "ios": {
+      "bundleIdentifier": "com.irshadpcind.kazal",
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.irshadpcind.kazal",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Spacing } from '@/theme';
-import { Screen, ScreenTitle, Chip, OpportunityCard } from '@/components';
+import { Screen, ScreenTitle, AnimatedIn, Chip, OpportunityCard } from '@/components';
 import { opportunities, oppTabs } from '@/data/mock';
 
 export default function Opportunities() {
@@ -29,12 +29,13 @@ export default function Opportunities() {
         ))}
       </ScrollView>
 
-      {filtered.map((o) => (
-        <OpportunityCard
-          key={o.id}
-          opp={o}
-          onPress={() => router.push({ pathname: '/opportunity/[id]', params: { id: o.id } })}
-        />
+      {filtered.map((o, i) => (
+        <AnimatedIn key={o.id} index={i}>
+          <OpportunityCard
+            opp={o}
+            onPress={() => router.push({ pathname: '/opportunity/[id]', params: { id: o.id } })}
+          />
+        </AnimatedIn>
       ))}
     </Screen>
   );

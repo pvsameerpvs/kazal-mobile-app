@@ -1,3 +1,4 @@
+export { AnimatedIn } from './AnimatedIn';
 export { Screen } from './Screen';
 export { GlowBackground } from './GlowBackground';
 export { GlassCard } from './GlassCard';

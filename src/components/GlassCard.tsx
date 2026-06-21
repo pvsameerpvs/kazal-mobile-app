@@ -57,5 +57,5 @@ const styles = StyleSheet.create({
     shadowRadius: 22,
   },
   padded: { padding: Spacing.lg },
-  pressed: { opacity: 0.85, transform: [{ scale: 0.99 }] },
+  pressed: { opacity: 0.88, transform: [{ scale: 0.97 }] },
 });

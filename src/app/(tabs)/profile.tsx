@@ -2,7 +2,7 @@ import { View, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radius, Spacing } from '@/theme';
-import { Screen, GlassCard, Button, Logo, Txt } from '@/components';
+import { Screen, AnimatedIn, GlassCard, Button, Logo, Txt } from '@/components';
 import { profile } from '@/data/mock';
 
 function QuickAction({
@@ -34,74 +34,86 @@ export default function Profile() {
   return (
     <Screen contentStyle={styles.content}>
       {/* Header */}
-      <GlassCard padded={false} style={styles.header}>
-        <View style={styles.headerInner}>
-          <View style={styles.logoRing}>
-            <Logo size={52} />
-          </View>
-          <Txt variant="h2" style={{ marginTop: Spacing.lg, textAlign: 'center' }}>
-            About {profile.name}
-          </Txt>
-          <View style={styles.verified}>
-            <Ionicons name="shield-checkmark" size={13} color={Colors.cyan} />
-            <Txt variant="caption" style={{ color: Colors.cyan }}>
-              {profile.role}
+      <AnimatedIn index={0}>
+        <GlassCard padded={false} style={styles.header}>
+          <View style={styles.headerInner}>
+            <View style={styles.logoRing}>
+              <Logo size={52} />
+            </View>
+            <Txt variant="h2" style={{ marginTop: Spacing.lg, textAlign: 'center' }}>
+              About {profile.name}
             </Txt>
+            <View style={styles.verified}>
+              <Ionicons name="shield-checkmark" size={13} color={Colors.cyan} />
+              <Txt variant="caption" style={{ color: Colors.cyan }}>
+                {profile.role}
+              </Txt>
+            </View>
           </View>
-        </View>
-      </GlassCard>
+        </GlassCard>
+      </AnimatedIn>
 
       {/* Quick actions */}
-      <View style={styles.actions}>
-        <QuickAction icon="call-outline" label="Call" color={Colors.teal} onPress={() => router.push('/contact')} />
-        <QuickAction icon="logo-whatsapp" label="WhatsApp" color="#25D366" onPress={() => router.push('/contact')} />
-        <QuickAction icon="mail-outline" label="Email" color={Colors.cyan} onPress={() => router.push('/contact')} />
-        <QuickAction icon="chatbubbles-outline" label="Chat" color={Colors.blue} onPress={() => router.push('/(tabs)/chat')} />
-      </View>
+      <AnimatedIn index={1}>
+        <View style={styles.actions}>
+          <QuickAction icon="call-outline" label="Call" color={Colors.teal} onPress={() => router.push('/contact')} />
+          <QuickAction icon="logo-whatsapp" label="WhatsApp" color="#25D366" onPress={() => router.push('/contact')} />
+          <QuickAction icon="mail-outline" label="Email" color={Colors.cyan} onPress={() => router.push('/contact')} />
+          <QuickAction icon="chatbubbles-outline" label="Chat" color={Colors.blue} onPress={() => router.push('/(tabs)/chat')} />
+        </View>
+      </AnimatedIn>
 
       {/* Intro */}
-      <Txt variant="body" style={styles.intro}>
-        {profile.intro}
-      </Txt>
+      <AnimatedIn index={2}>
+        <Txt variant="body" style={styles.intro}>
+          {profile.intro}
+        </Txt>
+      </AnimatedIn>
 
       {/* Key points */}
-      <Txt variant="h3" style={styles.sectionLabel}>
-        What We Do
-      </Txt>
-      <GlassCard padded={false}>
-        {profile.keyPoints.map((t, i) => (
-          <View key={t} style={[styles.point, i < profile.keyPoints.length - 1 && styles.pointBorder]}>
-            <View style={styles.check}>
-              <Ionicons name="checkmark" size={14} color={Colors.cyan} />
+      <AnimatedIn index={3}>
+        <Txt variant="h3" style={styles.sectionLabel}>
+          What We Do
+        </Txt>
+        <GlassCard padded={false}>
+          {profile.keyPoints.map((t, i) => (
+            <View key={t} style={[styles.point, i < profile.keyPoints.length - 1 && styles.pointBorder]}>
+              <View style={styles.check}>
+                <Ionicons name="checkmark" size={14} color={Colors.cyan} />
+              </View>
+              <Txt variant="bodyStrong" style={{ flex: 1 }}>
+                {t}
+              </Txt>
             </View>
-            <Txt variant="bodyStrong" style={{ flex: 1 }}>
-              {t}
-            </Txt>
-          </View>
-        ))}
-      </GlassCard>
+          ))}
+        </GlassCard>
+      </AnimatedIn>
 
       {/* Markets */}
-      <Txt variant="h3" style={styles.sectionLabel}>
-        Markets
-      </Txt>
-      <View style={styles.tags}>
-        {profile.markets.map((c) => (
-          <View key={c} style={styles.tag}>
-            <Ionicons name="location" size={13} color={Colors.cyan} />
-            <Txt variant="label" style={{ color: Colors.text }}>
-              {c}
-            </Txt>
-          </View>
-        ))}
-      </View>
+      <AnimatedIn index={4}>
+        <Txt variant="h3" style={styles.sectionLabel}>
+          Markets
+        </Txt>
+        <View style={styles.tags}>
+          {profile.markets.map((c) => (
+            <View key={c} style={styles.tag}>
+              <Ionicons name="location" size={13} color={Colors.cyan} />
+              <Txt variant="label" style={{ color: Colors.text }}>
+                {c}
+              </Txt>
+            </View>
+          ))}
+        </View>
+      </AnimatedIn>
 
-      <Button
-        label="Contact Us"
-        icon="chatbubble-ellipses-outline"
-        onPress={() => router.push('/contact')}
-        style={styles.contactBtn}
-      />
+      <AnimatedIn index={5}>
+        <Button
+          label="Contact Us"
+          icon="chatbubble-ellipses-outline"
+          onPress={() => router.push('/contact')}
+          style={styles.contactBtn}
+        />
+      </AnimatedIn>
     </Screen>
   );
 }

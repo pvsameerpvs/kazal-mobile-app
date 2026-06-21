@@ -2,7 +2,7 @@ import { View, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Spacing } from '@/theme';
-import { Screen, ScreenTitle, GlassCard, Button, Txt } from '@/components';
+import { Screen, ScreenTitle, AnimatedIn, GlassCard, Button, Txt } from '@/components';
 import { chatThreads } from '@/data/mock';
 
 export default function ChatList() {
@@ -12,48 +12,51 @@ export default function ChatList() {
     <Screen contentStyle={styles.content}>
       <ScreenTitle title="Messages" subtitle="Your advisory conversations" avatar />
 
-      <Button
-        label="Start New Inquiry"
-        icon="add-circle-outline"
-        onPress={() => router.push('/login')}
-        style={styles.newBtn}
-      />
+      <AnimatedIn index={0}>
+        <Button
+          label="Start New Inquiry"
+          icon="add-circle-outline"
+          onPress={() => router.push('/login')}
+          style={styles.newBtn}
+        />
+      </AnimatedIn>
 
-      {chatThreads.map((t) => (
-        <GlassCard
-          key={t.id}
-          onPress={() => router.push({ pathname: '/chat/[id]', params: { id: t.id } })}
-          style={styles.thread}
-        >
-          <View style={styles.threadRow}>
-            <View style={styles.avatar}>
-              <Ionicons name="headset-outline" size={20} color={Colors.cyan} />
-              {t.online && <View style={styles.onlineDot} />}
-            </View>
-            <View style={styles.flex}>
-              <View style={styles.threadTop}>
-                <Txt variant="bodyStrong" numberOfLines={1} style={styles.flex}>
-                  {t.name}
-                </Txt>
-                <Txt variant="caption" style={{ color: Colors.textMuted }}>
-                  {t.time}
-                </Txt>
+      {chatThreads.map((t, i) => (
+        <AnimatedIn key={t.id} index={i + 1}>
+          <GlassCard
+            onPress={() => router.push({ pathname: '/chat/[id]', params: { id: t.id } })}
+            style={styles.thread}
+          >
+            <View style={styles.threadRow}>
+              <View style={styles.avatar}>
+                <Ionicons name="headset-outline" size={20} color={Colors.cyan} />
+                {t.online && <View style={styles.onlineDot} />}
               </View>
-              <View style={styles.threadBottom}>
-                <Txt variant="caption" style={styles.preview} numberOfLines={1}>
-                  {t.preview}
-                </Txt>
-                {t.unread > 0 && (
-                  <View style={styles.badge}>
-                    <Txt variant="caption" style={styles.badgeText}>
-                      {t.unread}
-                    </Txt>
-                  </View>
-                )}
+              <View style={styles.flex}>
+                <View style={styles.threadTop}>
+                  <Txt variant="bodyStrong" numberOfLines={1} style={styles.flex}>
+                    {t.name}
+                  </Txt>
+                  <Txt variant="caption" style={{ color: Colors.textMuted }}>
+                    {t.time}
+                  </Txt>
+                </View>
+                <View style={styles.threadBottom}>
+                  <Txt variant="caption" style={styles.preview} numberOfLines={1}>
+                    {t.preview}
+                  </Txt>
+                  {t.unread > 0 && (
+                    <View style={styles.badge}>
+                      <Txt variant="caption" style={styles.badgeText}>
+                        {t.unread}
+                      </Txt>
+                    </View>
+                  )}
+                </View>
               </View>
             </View>
-          </View>
-        </GlassCard>
+          </GlassCard>
+        </AnimatedIn>
       ))}
     </Screen>
   );

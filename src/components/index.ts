@@ -17,3 +17,16 @@ export { SearchBar } from './SearchBar';
 export { ScreenTitle } from './ScreenTitle';
 export { Field, SelectField } from './Field';
 export { Txt } from './Txt';
+
+export {
+  ChatHeader,
+  ChatMessageList,
+  ChatBubble,
+  ChatInput,
+  ChatReplyBar,
+  ChatAttachmentBar,
+  ChatAttachMenu,
+  ChatTypingIndicator,
+  ChatReactions,
+  ChatDateSeparator,
+} from './chat';

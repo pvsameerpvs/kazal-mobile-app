@@ -8,20 +8,29 @@
 - Always review `git status`, `git diff`, and `git log` before committing.
 - Do NOT stage files that are unrelated to the current task.
 
+## File Size Limit (CRITICAL)
+- No single file should exceed **300 lines**.
+- If a file approaches 300 lines, extract logic into:
+  - Reusable components in `components/`
+  - Custom hooks in `hooks/`
+  - Utility functions in `utils/`
+  - Constants in `constants/`
+
 ## Folder Structure
 
 ```
 src/
 ├── api/             # API layer (client, endpoints)
 ├── app/             # Expo Router file-based routes (unchanged)
-├── components/      # Shared UI components (one file per component)
-├── constants/       # Shared constants (layout, dimensions, enums)
+├── components/      # Shared UI components (one file per component, max 300 lines)
+│   └── chat/        # Chat-specific components (sub-directory for complex features)
+├── constants/       # Shared constants (layout, dimensions, enums, chat config)
 ├── data/            # Mock data / static content
 ├── hooks/           # Custom React hooks
 ├── providers/       # React Context providers
 ├── theme/           # Design tokens (colors, typography, spacing)
 ├── types/           # TypeScript type definitions
-└── utils/           # Pure utility functions (format, validation, styles)
+└── utils/           # Pure utility functions (format, validation, styles, chat utils)
 ```
 
 ## Component Standards
@@ -78,12 +87,40 @@ const styles = StyleSheet.create({ ... });
 - Accessibility: add `accessibilityLabel`, `accessibilityRole` where appropriate.
 - Strings are hardcoded (no i18n for now — use mock data from `src/data/mock.ts`).
 
+## Complex Feature Pattern (e.g., Chat)
+
+For features with 5+ components, use a sub-directory under `components/`:
+
+```
+components/chat/
+├── index.ts                    # Barrel export
+├── ChatHeader.tsx              # Single responsibility
+├── ChatBubble.tsx              # React.memo for performance
+├── ChatMessageList.tsx         # FlatList with virtualization
+├── ChatInput.tsx               # Input bar
+└── ...                         # One file per component
+```
+
+Rules:
+- Each file ≤ 300 lines
+- Logic in `hooks/useChat.ts`
+- Constants in `constants/chat.ts`
+- Utilities in `utils/chat.ts`
+- Screen file in `app/` is a thin orchestrator (< 100 lines)
+
+## Performance Rules (Chat)
+- Use `FlatList` (not ScrollView) for message lists
+- Use `React.memo` on message bubble components
+- Use `removeClippedSubviews`, `windowSize`, `maxToRenderPerBatch` for large lists
+- Extract gesture/Animation logic into the component (not the hook)
+
 ## New Feature Checklist
 
 1. Define types in `src/types/` first.
 2. Add mock data in `src/data/mock.ts` if needed.
-3. Create UI components in `src/components/`.
+3. Create UI components in `src/components/` (one per file, ≤ 300 lines).
 4. Add custom hooks in `src/hooks/`.
-5. Wire up in `src/app/` route.
+5. Wire up in `src/app/` route (thin orchestrator).
 6. Add utilities to `src/utils/` if reusable logic.
-7. Commit with descriptive message.
+7. Add constants to `src/constants/` if config values needed.
+8. Commit with descriptive message.

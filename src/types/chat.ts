@@ -32,4 +32,5 @@ export type ChatMessage = {
   file?: { name: string; size: string; mimeType?: string };
   replyTo?: { text: string; from: string };
   reactions?: string[];
+  status?: 'sent' | 'delivered' | 'read';
 };

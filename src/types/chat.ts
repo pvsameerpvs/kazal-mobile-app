@@ -15,11 +15,21 @@ export type ChatThread = {
   context?: ChatContext;
 };
 
+export type PendingAttachment = {
+  type: 'image' | 'file';
+  uri: string;
+  name: string;
+  size?: string;
+  mimeType?: string;
+};
+
 export type ChatMessage = {
   id: string;
   from: 'me' | 'advisor';
   text?: string;
   time: string;
-  file?: { name: string; size: string };
+  image?: string;
+  file?: { name: string; size: string; mimeType?: string };
   replyTo?: { text: string; from: string };
+  reactions?: string[];
 };

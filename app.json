@@ -38,6 +38,13 @@
             "backgroundColor": "#05080F"
           }
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Kazal needs access to your photos to share images in chat.",
+          "cameraPermission": "Kazal needs access to your camera to take and share photos."
+        }
       ]
     ],
     "experiments": {

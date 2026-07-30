@@ -94,7 +94,7 @@ export default function ChatScreen() {
               value={input}
               onChangeText={setInput}
               onSend={send}
-              onAttach={() => setShowAttach(true)}
+              onAttach={() => { Keyboard.dismiss(); setTimeout(() => setShowAttach(true), 100); }}
               hasAttachment={!!pendingAttach}
             />
           </View>

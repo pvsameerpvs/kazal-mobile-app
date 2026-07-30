@@ -53,8 +53,10 @@ export function ChatAttachMenu({ visible, onClose, onCamera, onGallery, onDocume
 
 const styles = StyleSheet.create({
   overlay: {
-    flex: 1, justifyContent: 'flex-end',
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
     backgroundColor: 'rgba(0,0,0,0.6)',
+    zIndex: 100,
   },
   menu: {
     backgroundColor: Colors.bgRaised,

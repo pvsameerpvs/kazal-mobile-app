@@ -94,13 +94,13 @@ export default function ServiceDetail() {
         <Button
           label="Inquire Now"
           icon="document-text-outline"
-          onPress={() => router.push({ pathname: '/login', params: { context: 'service', id: service.id, label: service.title } })}
+          onPress={() => router.push({ pathname: '/(tabs)/chat', params: { context: 'service', label: service.title } })}
         />
         <Button
           label="Chat About This"
           variant="secondary"
           icon="chatbubble-ellipses-outline"
-          onPress={() => router.push({ pathname: '/login', params: { context: 'service', id: service.id, label: service.title } })}
+          onPress={() => router.push({ pathname: '/(tabs)/chat', params: { context: 'service', label: service.title } })}
         />
       </View>
     </Screen>

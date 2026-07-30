@@ -10,8 +10,8 @@ type Props = {
   onSend: () => void;
   onAttach: () => void;
   hasAttachment: boolean;
-  keyboardVisible: boolean;
-  bottomPadding: number;
+  keyboardVisible?: boolean;
+  bottomPadding?: number;
 };
 
 export function ChatInput({
@@ -20,7 +20,7 @@ export function ChatInput({
   const canSend = value.trim().length > 0 || hasAttachment;
 
   return (
-    <View style={[styles.bar, { paddingBottom: keyboardVisible ? Spacing.sm : Math.max(bottomPadding, Spacing.sm) }]}>
+    <View style={[styles.bar, { paddingBottom: keyboardVisible ? Spacing.sm : Spacing.sm }]}>
       <View style={styles.row}>
         <TouchableOpacity style={styles.attachBtn} onPress={onAttach}>
           <Ionicons name="add-circle" size={26} color={Colors.textSecondary} />

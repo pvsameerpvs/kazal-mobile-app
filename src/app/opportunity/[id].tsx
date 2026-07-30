@@ -64,13 +64,13 @@ export default function OpportunityDetail() {
         <Button
           label="Inquire Now"
           icon="document-text-outline"
-          onPress={() => router.push({ pathname: '/login', params: { context: 'opportunity', id: opp.id, label: opp.title } })}
+          onPress={() => router.push({ pathname: '/(tabs)/chat', params: { context: 'opportunity', label: opp.title } })}
         />
         <Button
           label="Chat About This"
           variant="secondary"
           icon="chatbubble-ellipses-outline"
-          onPress={() => router.push({ pathname: '/login', params: { context: 'opportunity', id: opp.id, label: opp.title } })}
+          onPress={() => router.push({ pathname: '/(tabs)/chat', params: { context: 'opportunity', label: opp.title } })}
         />
       </View>
     </Screen>

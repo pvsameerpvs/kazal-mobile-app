@@ -29,5 +29,4 @@ export {
   ChatTypingIndicator,
   ChatReactions,
   ChatDateSeparator,
-  ThreadRow,
 } from './chat';

@@ -10,7 +10,7 @@ import type { ChatMessage } from '@/types';
 type Props = {
   messages: ChatMessage[];
   typing: boolean;
-  onLoadMore: () => void;
+  onLoadMore?: () => void;
   onSwipeReply: (msg: ChatMessage) => void;
   onReact: (msgId: string, emoji: string) => void;
   onDoubleTap: (msgId: string) => void;

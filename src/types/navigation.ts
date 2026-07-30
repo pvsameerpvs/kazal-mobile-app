@@ -2,8 +2,8 @@ export type AppRoutes = {
   '/(tabs)/home': undefined;
   '/(tabs)/services': undefined;
   '/(tabs)/opportunities': undefined;
-  '/(tabs)/chat': undefined;
   '/(tabs)/profile': undefined;
+  '/(tabs)/chat': undefined;
   '/login': undefined;
   '/contact': undefined;
   '/service/[id]': { id: string };

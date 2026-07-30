@@ -8,4 +8,3 @@ export { ChatAttachMenu } from './ChatAttachMenu';
 export { ChatTypingIndicator } from './ChatTypingIndicator';
 export { ChatReactions } from './ChatReactions';
 export { ChatDateSeparator } from './ChatDateSeparator';
-export { ThreadRow } from './ThreadRow';

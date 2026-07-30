@@ -2,7 +2,7 @@ import { forwardRef, useEffect } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { Tabs, TabSlot, TabList, TabTrigger, TabTriggerSlotProps } from 'expo-router/ui';
-import { Href } from 'expo-router';
+import { Href, useSegments } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Radius, Spacing } from '@/theme';
@@ -69,10 +69,13 @@ TabButton.displayName = 'TabButton';
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
+  const segments = useSegments();
+  const hideTabBar = segments.length > 1 && segments[1] === 'chat';
+
   return (
     <Tabs style={styles.root}>
       <TabSlot />
-      <TabList style={[styles.bar, { bottom: Math.max(insets.bottom, 16) }]}>
+      <TabList style={[styles.bar, { bottom: Math.max(insets.bottom, 16) }, hideTabBar && styles.hidden]}>
         {TABS.map((t) => (
           <TabTrigger key={t.name} name={t.name} href={t.href} asChild>
             <TabButton icon={t.icon} active={t.active} label={t.label} />
@@ -96,13 +99,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: Colors.glassHairline,
-    backgroundColor: 'rgba(9,16,30,0.94)',
-    shadowColor: '#000000',
-    shadowOpacity: 0.5,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 16,
   },
+  hidden: { opacity: 0, pointerEvents: 'none' },
   tab: { flex: 1, alignItems: 'center', gap: 2, paddingVertical: 6 },
   iconWrap: {
     width: 44,

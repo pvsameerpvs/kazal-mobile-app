@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Gradients, Radius, Spacing, Type } from '@/theme';
 import { GlowBackground, Logo, Txt } from '@/components';
-import { findThreadByContext } from '@/data';
 
 export default function Login() {
   const router = useRouter();
@@ -20,12 +19,11 @@ export default function Login() {
   }, [params]);
 
   const navigate = useMemo(() => {
-    if (params.context && params.id) {
-      const thread = findThreadByContext({ type: params.context as 'service' | 'opportunity', id: params.id, label: params.label ?? '' });
-      if (thread) return () => router.replace({ pathname: '/chat/[id]', params: { id: thread.id } });
-    }
-    return () => router.replace('/(tabs)/chat');
-  }, [params.context, params.id, params.label]);
+    const chatParams: Record<string, string> = {};
+    if (params.context) chatParams.context = params.context;
+    if (params.label) chatParams.label = params.label;
+    return () => router.replace({ pathname: '/(tabs)/chat', params: chatParams });
+  }, [params.context, params.label]);
 
   const signInWithGoogle = () => {
     setLoading(true);

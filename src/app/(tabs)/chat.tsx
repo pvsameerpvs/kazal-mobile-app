@@ -9,6 +9,7 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Gradients, Radius, Spacing, Type } from '@/theme';
 import { Txt } from '@/components';
 import { chatThreads } from '@/data/mock';
@@ -118,74 +119,76 @@ export default function ChatList() {
   return (
     <View style={styles.root}>
       <LinearGradient colors={Gradients.screen} style={StyleSheet.absoluteFill} />
+      <SafeAreaView style={styles.safe} edges={['top']}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.headerTop}>
+            <Txt variant="h2" style={{ color: Colors.text, fontWeight: '700' }}>Chats</Txt>
+            <View style={styles.headerActions}>
+              <Pressable style={styles.headerBtn}>
+                <Ionicons name="camera-outline" size={22} color={Colors.textSecondary} />
+              </Pressable>
+              <Pressable style={styles.headerBtn}>
+                <Ionicons name="ellipsis-vertical" size={20} color={Colors.textSecondary} />
+              </Pressable>
+            </View>
+          </View>
 
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <Txt variant="h2" style={{ color: Colors.text, fontWeight: '700' }}>Chats</Txt>
-          <View style={styles.headerActions}>
-            <Pressable style={styles.headerBtn}>
-              <Ionicons name="camera-outline" size={22} color={Colors.textSecondary} />
-            </Pressable>
-            <Pressable style={styles.headerBtn}>
-              <Ionicons name="ellipsis-vertical" size={20} color={Colors.textSecondary} />
-            </Pressable>
+          {/* Search */}
+          <View style={styles.searchBar}>
+            <Ionicons name="search" size={18} color={Colors.textMuted} style={{ marginRight: 8 }} />
+            <TextInput
+              value={search}
+              onChangeText={setSearch}
+              placeholder="Search chats"
+              placeholderTextColor={Colors.textMuted}
+              style={styles.searchInput}
+              selectionColor={Colors.cyan}
+            />
           </View>
         </View>
 
-        {/* Search */}
-        <View style={styles.searchBar}>
-          <Ionicons name="search" size={18} color={Colors.textMuted} style={{ marginRight: 8 }} />
-          <TextInput
-            value={search}
-            onChangeText={setSearch}
-            placeholder="Search chats"
-            placeholderTextColor={Colors.textMuted}
-            style={styles.searchInput}
-            selectionColor={Colors.cyan}
-          />
+        {/* Filter chips */}
+        <View style={styles.filterRow}>
+          <Pressable style={[styles.filterChip, styles.filterChipActive]}>
+            <Txt variant="label" style={{ color: Colors.cyan, fontWeight: '600' }}>All</Txt>
+          </Pressable>
+          <Pressable style={styles.filterChip}>
+            <Txt variant="label" style={{ color: Colors.textSecondary }}>Unread</Txt>
+          </Pressable>
+          <Pressable style={styles.filterChip}>
+            <Txt variant="label" style={{ color: Colors.textSecondary }}>Services</Txt>
+          </Pressable>
         </View>
-      </View>
 
-      {/* Filter chips */}
-      <View style={styles.filterRow}>
-        <Pressable style={[styles.filterChip, styles.filterChipActive]}>
-          <Txt variant="label" style={{ color: Colors.cyan, fontWeight: '600' }}>All</Txt>
-        </Pressable>
-        <Pressable style={styles.filterChip}>
-          <Txt variant="label" style={{ color: Colors.textSecondary }}>Unread</Txt>
-        </Pressable>
-        <Pressable style={styles.filterChip}>
-          <Txt variant="label" style={{ color: Colors.textSecondary }}>Services</Txt>
-        </Pressable>
-      </View>
-
-      {/* Thread list */}
-      <FlatList
-        data={filtered}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View style={styles.empty}>
-            <Ionicons name="chatbubbles-outline" size={48} color={Colors.textMuted} />
-            <Txt variant="body" style={{ color: Colors.textMuted, marginTop: Spacing.md }}>No chats found</Txt>
-          </View>
-        }
-      />
+        {/* Thread list */}
+        <FlatList
+          data={filtered}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View style={styles.empty}>
+              <Ionicons name="chatbubbles-outline" size={48} color={Colors.textMuted} />
+              <Txt variant="body" style={{ color: Colors.textMuted, marginTop: Spacing.md }}>No chats found</Txt>
+            </View>
+          }
+        />
+      </SafeAreaView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: Colors.bg },
+  safe: { flex: 1 },
 
   // Header
   header: {
     paddingHorizontal: Spacing.xl,
     paddingTop: Spacing.xl,
-    paddingBottom: Spacing.md,
+    paddingBottom: Spacing.sm,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Colors.border,
   },

@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radius, Spacing } from '@/theme';
 import { Screen, AnimatedIn, GlassCard, Button, Logo, Txt } from '@/components';
-import { profile } from '@/data/mock';
+import { profile } from '@/data';
 
 function QuickAction({
   icon,

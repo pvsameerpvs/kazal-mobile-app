@@ -1,14 +1,16 @@
+import { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radius, Spacing } from '@/theme';
 import { Screen, TopBar, GlassCard, Button, StatusBadge, Txt } from '@/components';
-import { opportunities } from '@/data/mock';
+import { opportunities } from '@/data';
 
 export default function OpportunityDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const opp = opportunities.find((o) => o.id === id) ?? opportunities[0];
+  const [bookmarked, setBookmarked] = useState(false);
 
   const rows: { label: string; value: string }[] = [
     { label: 'Issuing Bank', value: opp.issuingBank },
@@ -23,8 +25,8 @@ export default function OpportunityDetail() {
     <Screen contentStyle={styles.content}>
       <TopBar
         action={
-          <Pressable hitSlop={8} style={styles.bookmark}>
-            <Ionicons name="bookmark-outline" size={20} color={Colors.textSecondary} />
+          <Pressable hitSlop={8} style={[styles.bookmark, bookmarked && styles.bookmarked]} onPress={() => setBookmarked((b) => !b)}>
+            <Ionicons name={bookmarked ? 'bookmark' : 'bookmark-outline'} size={20} color={bookmarked ? Colors.cyan : Colors.textSecondary} />
           </Pressable>
         }
       />
@@ -86,6 +88,10 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  bookmarked: {
+    backgroundColor: 'rgba(43,210,255,0.10)',
+    borderColor: Colors.borderAccent,
   },
   instrument: { marginTop: Spacing.lg, color: Colors.textSecondary, fontWeight: '600' },
   amount: { marginTop: 2, color: Colors.text },

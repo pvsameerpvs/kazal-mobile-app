@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radius, Spacing } from '@/theme';
 import { Screen, AnimatedIn, GlassCard, IconTile, SectionHeader, OpportunityCard, Txt } from '@/components';
-import { quickAccess, opportunities } from '@/data/mock';
+import { quickAccess, opportunities } from '@/data';
 
 const greeting = () => {
   const h = new Date().getHours();

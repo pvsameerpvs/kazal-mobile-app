@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Gradients, Radius, Spacing, Type } from '@/theme';
 import { GlowBackground, Logo, Txt } from '@/components';
-import { findThreadByContext } from '@/data/mock';
+import { findThreadByContext } from '@/data';
 
 export default function Login() {
   const router = useRouter();

@@ -2,7 +2,7 @@ import { View, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Colors, Radius, Spacing } from '@/theme';
-import { company } from '@/data/mock';
+import { company } from '@/data';
 import { Logo } from './Logo';
 import { Txt } from './Txt';
 

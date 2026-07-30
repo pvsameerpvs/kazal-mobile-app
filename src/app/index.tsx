@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Gradients, Spacing } from '@/theme';
 import { GlowBackground, Logo, Skyline, Txt } from '@/components';
-import { company } from '@/data/mock';
+import { company } from '@/data';
 
 export default function Splash() {
   const router = useRouter();

@@ -26,5 +26,5 @@ export type QuickAccessItem = {
   id: string;
   label: string;
   icon: import('./icon').IconRef;
-  href: string;
+  href: '/(tabs)/services' | '/(tabs)/opportunities' | '/(tabs)/chat';
 };

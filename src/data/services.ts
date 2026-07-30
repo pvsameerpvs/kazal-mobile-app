@@ -1,0 +1,68 @@
+import type { Service } from '@/types';
+
+export const services: Service[] = [
+  {
+    id: 'letter-of-credit',
+    title: 'Letter of Credit',
+    summary: 'Secure trade transactions with reliable LC solutions.',
+    icon: { set: 'ion', name: 'document-text-outline' },
+    description: 'Reliable Letter of Credit solutions that secure international trade and protect your capital until agreed terms are met.',
+    features: ['Bank-guaranteed payment security', 'Sight & usance terms', 'Trusted GCC banking network'],
+  },
+  {
+    id: 'bank-guarantee',
+    title: 'Bank Guarantee',
+    summary: 'Support contractual commitments with trusted guarantee solutions.',
+    icon: { set: 'ion', name: 'shield-checkmark-outline' },
+    description: 'Bid, performance and advance payment guarantees that demonstrate your financial credibility to partners and authorities.',
+    features: ['Bid, performance & advance bonds', 'Recognised by leading banks', 'Fast issuance turnaround'],
+  },
+  {
+    id: 'standby-lc',
+    title: 'Standby LC',
+    summary: 'Flexible standby credit solutions for business needs.',
+    icon: { set: 'mci', name: 'file-certificate-outline' },
+    description: 'A standby Letter of Credit acts as a dependable backup payment promise for large contracts and long-term agreements.',
+    features: ['Backup payment assurance', 'Suited to large contracts', 'Internationally accepted'],
+  },
+  {
+    id: 'government-bonds',
+    title: 'Government Bonds',
+    summary: 'Access selected bond opportunities for qualified clients.',
+    icon: { set: 'mci', name: 'bank-outline' },
+    description: 'Selected sovereign and government-linked bond opportunities with advisory support on structuring, tenor and yield.',
+    features: ['Sovereign-grade security', 'Predictable returns', 'Advisory on tenor & yield'],
+  },
+  {
+    id: 'commercial-loans',
+    title: 'Commercial Loans',
+    summary: 'Funding support for expansion, operations, and working capital.',
+    icon: { set: 'mci', name: 'cash-multiple' },
+    description: 'Tailored commercial loan solutions matched to your cash flow and growth strategy — from working capital to expansion.',
+    features: ['Working capital & term loans', 'Competitive rates', 'Structured to your cash flow'],
+  },
+  {
+    id: 'trade-finance',
+    title: 'Trade Finance',
+    summary: 'Finance solutions tailored for import, export, and structured trade.',
+    icon: { set: 'ion', name: 'boat-outline' },
+    description: 'End-to-end trade finance that keeps your supply chain moving — from documentary collections to supplier financing.',
+    features: ['Import & export financing', 'Supply chain solutions', 'Multi-currency support'],
+  },
+  {
+    id: 'credit-solutions',
+    title: 'Credit Solutions',
+    summary: 'Custom advisory for business credit and funding requirements.',
+    icon: { set: 'ion', name: 'card-outline' },
+    description: 'Flexible revolving credit and overdraft facilities designed to give your business liquidity exactly when needed.',
+    features: ['Revolving credit lines', 'Overdraft facilities', 'Flexible repayment'],
+  },
+  {
+    id: 'other-solutions',
+    title: 'Other Solutions',
+    summary: 'Specialized advisory based on client needs.',
+    icon: { set: 'ion', name: 'ellipsis-horizontal-circle-outline' },
+    description: 'Bespoke financial advisory shaped around your specific objectives, sector and market requirements.',
+    features: ['Bespoke structuring', 'Sector-specific advisory', 'Regional & global reach'],
+  },
+];

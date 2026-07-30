@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Spacing } from '@/theme';
 import { Screen, ScreenTitle, AnimatedIn, Chip, OpportunityCard } from '@/components';
-import { opportunities, oppTabs } from '@/data/mock';
+import { opportunities, oppTabs } from '@/data';
 
 export default function Opportunities() {
   const router = useRouter();

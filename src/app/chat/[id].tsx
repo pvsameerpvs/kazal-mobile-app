@@ -1,19 +1,22 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View, StyleSheet, Platform, Keyboard, KeyboardAvoidingView } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Gradients } from '@/theme';
 import { ChatHeader, ChatMessageList, ChatInput, ChatReplyBar, ChatAttachmentBar, ChatAttachMenu } from '@/components/chat';
 import { useChat } from '@/hooks/useChat';
-import { chatThreads } from '@/data/mock';
-import type { ChatMessage } from '@/types';
+import { chatThreads } from '@/data';
+import type { ChatMessage, PendingAttachment } from '@/types';
 
 export default function ChatDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const thread = chatThreads.find((t) => t.id === id) ?? chatThreads[0];
   const insets = useSafeAreaInsets();
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [showAttachMenu, setShowAttachMenu] = useState(false);
 
   const {
     messages, input, setInput, typing, replyTo, setReplyTo,
@@ -36,9 +39,37 @@ export default function ChatDetail() {
   }, [addReaction]);
 
   const handleAttachRemove = () => setPendingAttach(null);
-  const handleCamera = () => {};
-  const handleGallery = () => {};
-  const handleDocument = () => {};
+
+  const handleCamera = useCallback(async () => {
+    setShowAttachMenu(false);
+    const result = await ImagePicker.launchCameraAsync({ quality: 0.7 });
+    if (!result.canceled && result.assets[0]) {
+      const { uri, fileName } = result.assets[0];
+      setPendingAttach({ type: 'image', uri, name: fileName ?? 'Photo' } as PendingAttachment);
+    }
+  }, [setPendingAttach]);
+
+  const handleGallery = useCallback(async () => {
+    setShowAttachMenu(false);
+    const result = await ImagePicker.launchImageLibraryAsync({ quality: 0.7 });
+    if (!result.canceled && result.assets[0]) {
+      const { uri, fileName } = result.assets[0];
+      setPendingAttach({ type: 'image', uri, name: fileName ?? 'Image' } as PendingAttachment);
+    }
+  }, [setPendingAttach]);
+
+  const handleDocument = useCallback(async () => {
+    setShowAttachMenu(false);
+    const result = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true });
+    if (!result.canceled && result.assets[0]) {
+      const { uri, name, size, mimeType } = result.assets[0];
+      setPendingAttach({
+        type: 'file', uri, name,
+        size: size ? `${(size / 1024).toFixed(0)} KB` : undefined,
+        mimeType: mimeType ?? undefined,
+      } as PendingAttachment);
+    }
+  }, [setPendingAttach]);
 
   return (
     <View style={styles.root}>
@@ -72,12 +103,20 @@ export default function ChatDetail() {
             value={input}
             onChangeText={setInput}
             onSend={send}
-            onAttach={() => Keyboard.dismiss()}
+            onAttach={() => { Keyboard.dismiss(); setShowAttachMenu(true); }}
             hasAttachment={!!pendingAttach}
             keyboardVisible={keyboardVisible}
             bottomPadding={insets.bottom}
           />
         </KeyboardAvoidingView>
+
+        <ChatAttachMenu
+          visible={showAttachMenu}
+          onClose={() => setShowAttachMenu(false)}
+          onCamera={handleCamera}
+          onGallery={handleGallery}
+          onDocument={handleDocument}
+        />
       </SafeAreaView>
     </View>
   );

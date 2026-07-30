@@ -12,7 +12,7 @@ import {
   SectionHeader,
   Txt,
 } from '@/components';
-import { services, opportunities } from '@/data/mock';
+import { services, opportunities } from '@/data';
 
 export default function ServiceDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();

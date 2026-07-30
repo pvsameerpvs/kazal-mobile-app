@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen, ScreenTitle, AnimatedIn, ServiceCard } from '@/components';
-import { services } from '@/data/mock';
+import { services } from '@/data';
 
 export default function Services() {
   const router = useRouter();

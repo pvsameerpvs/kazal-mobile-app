@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { View, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Modal, Pressable, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Colors, Radius, Spacing } from '@/theme';
+import { Colors, Radius, Spacing, Type } from '@/theme';
 import { Screen, TopBar, GlassCard, Button, Field, SelectField, Skyline, Txt } from '@/components';
-import { company } from '@/data/mock';
+import { company, services } from '@/data';
 
 type Contact = {
   id: string;
@@ -30,6 +30,24 @@ export default function ContactScreen() {
   const [email, setEmail] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [message, setMessage] = useState('');
+  const [serviceNeeded, setServiceNeeded] = useState('');
+  const [showPicker, setShowPicker] = useState(false);
+
+  const handleSubmit = () => {
+    if (!name.trim() || !email.trim() || !companyName.trim()) {
+      Alert.alert('Missing fields', 'Please fill in your name, email and company name.');
+      return;
+    }
+    Alert.alert(
+      'Inquiry Sent',
+      'Thank you for reaching out. Our advisory team will respond within 24 hours.',
+    );
+    setName('');
+    setEmail('');
+    setCompanyName('');
+    setMessage('');
+    setServiceNeeded('');
+  };
 
   return (
     <Screen contentStyle={styles.content}>
@@ -92,11 +110,33 @@ export default function ContactScreen() {
             keyboardType="email-address"
           />
           <Field icon="business-outline" placeholder="Company name" value={companyName} onChangeText={setCompanyName} />
-          <SelectField icon="briefcase-outline" placeholder="Service needed" />
+          <SelectField icon="briefcase-outline" placeholder="Service needed" value={serviceNeeded} onPress={() => setShowPicker(true)} />
           <Field icon="chatbox-outline" placeholder="Message (optional)" value={message} onChangeText={setMessage} multiline />
         </View>
-        <Button label="Submit Inquiry" trailingIcon="arrow-forward" onPress={() => router.push('/login')} style={styles.submit} />
+        <Button label="Submit Inquiry" trailingIcon="arrow-forward" onPress={handleSubmit} style={styles.submit} />
       </GlassCard>
+
+      {/* Service picker modal */}
+      <Modal visible={showPicker} transparent animationType="fade" onRequestClose={() => setShowPicker(false)}>
+        <Pressable style={styles.modalOverlay} onPress={() => setShowPicker(false)}>
+          <Pressable style={styles.modalSheet} onPress={() => {}}>
+            <View style={styles.modalGrabber} />
+            <Txt variant="h3" style={styles.modalTitle}>Select a Service</Txt>
+            <ScrollView style={styles.modalList}>
+              {services.map((s) => (
+                <Pressable
+                  key={s.id}
+                  style={styles.modalItem}
+                  onPress={() => { setServiceNeeded(s.title); setShowPicker(false); }}
+                >
+                  <Txt variant="bodyStrong">{s.title}</Txt>
+                  <Txt variant="caption" style={{ color: Colors.textSecondary }}>{s.summary}</Txt>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </Pressable>
+        </Pressable>
+      </Modal>
 
       {/* Office */}
       <GlassCard style={styles.office} padded={false}>
@@ -182,4 +222,25 @@ const styles = StyleSheet.create({
   },
   footerItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   footerDivider: { width: StyleSheet.hairlineWidth, height: 18, backgroundColor: Colors.border },
+
+  modalOverlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.5)' },
+  modalSheet: {
+    backgroundColor: Colors.glassStrong,
+    borderTopLeftRadius: Radius.xl,
+    borderTopRightRadius: Radius.xl,
+    paddingBottom: Spacing.xxl,
+    maxHeight: '60%',
+  },
+  modalGrabber: { width: 40, height: 4, borderRadius: 2, backgroundColor: Colors.glassHairline, alignSelf: 'center', marginTop: Spacing.md },
+  modalTitle: { paddingHorizontal: Spacing.xl, marginTop: Spacing.lg, marginBottom: Spacing.md },
+  modalList: { paddingHorizontal: Spacing.xl },
+  modalItem: {
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.md,
+    borderRadius: Radius.md,
+    backgroundColor: Colors.glass,
+    marginBottom: Spacing.sm,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: Colors.border,
+  },
 });

@@ -6,22 +6,29 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Gradients, Radius, Spacing, Type } from '@/theme';
 import { Txt, ThreadRow } from '@/components';
-import { chatThreads } from '@/data/mock';
+import { chatThreads } from '@/data';
 import type { ChatThread } from '@/types';
 
 export default function ChatList() {
   const router = useRouter();
   const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState<'All' | 'Unread' | 'Services'>('All');
 
-  const filtered = useMemo(
-    () => search.trim()
-      ? chatThreads.filter(t =>
-          t.name.toLowerCase().includes(search.toLowerCase()) ||
-          t.desk.toLowerCase().includes(search.toLowerCase())
-        )
-      : chatThreads,
-    [search]
-  );
+  const filtered = useMemo(() => {
+    let threads = chatThreads;
+    if (search.trim()) {
+      threads = threads.filter(t =>
+        t.name.toLowerCase().includes(search.toLowerCase()) ||
+        t.desk.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    if (filter === 'Unread') {
+      threads = threads.filter(t => t.unread > 0);
+    } else if (filter === 'Services') {
+      threads = threads.filter(t => t.context?.type === 'service');
+    }
+    return threads;
+  }, [search, filter]);
 
   const renderItem = ({ item, index }: { item: ChatThread; index: number }) => (
     <ThreadRow
@@ -62,15 +69,17 @@ export default function ChatList() {
         </View>
 
         <View style={styles.filterRow}>
-          <Pressable style={[styles.filterChip, styles.filterChipActive]}>
-            <Txt variant="label" style={{ color: Colors.cyan, fontWeight: '600' }}>All</Txt>
-          </Pressable>
-          <Pressable style={styles.filterChip}>
-            <Txt variant="label" style={{ color: Colors.textSecondary }}>Unread</Txt>
-          </Pressable>
-          <Pressable style={styles.filterChip}>
-            <Txt variant="label" style={{ color: Colors.textSecondary }}>Services</Txt>
-          </Pressable>
+          {(['All', 'Unread', 'Services'] as const).map((f) => (
+            <Pressable
+              key={f}
+              style={[styles.filterChip, filter === f && styles.filterChipActive]}
+              onPress={() => setFilter(f)}
+            >
+              <Txt variant="label" style={{ color: filter === f ? Colors.cyan : Colors.textSecondary, fontWeight: filter === f ? '600' : '400' }}>
+                {f}
+              </Txt>
+            </Pressable>
+          ))}
         </View>
 
         <FlatList

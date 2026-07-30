@@ -3,14 +3,16 @@ import { View, StyleSheet, Pressable, TextInput, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Gradients, Radius, Spacing, Type } from '@/theme';
+import { TAB_BAR } from '@/constants/layout';
 import { Txt, ThreadRow } from '@/components';
 import { chatThreads } from '@/data';
 import type { ChatThread } from '@/types';
 
 export default function ChatList() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<'All' | 'Unread' | 'Services'>('All');
 
@@ -86,7 +88,7 @@ export default function ChatList() {
           data={filtered}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={[styles.listContent, { paddingBottom: TAB_BAR.HEIGHT + Math.max(insets.bottom, 16) + Spacing.xl }]}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View style={styles.empty}>

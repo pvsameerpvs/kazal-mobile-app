@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { InteractionManager } from 'react-native';
 import { CHAT_PAGE_SIZE } from '@/constants/chat';
-import { getThreadMessages } from '@/data/mock';
+import { getThreadMessages } from '@/data/chat-data';
 import type { ChatMessage, PendingAttachment } from '@/types';
 
 type UseChatOptions = {

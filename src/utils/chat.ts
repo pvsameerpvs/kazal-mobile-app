@@ -30,9 +30,17 @@ export function formatDateSeparator(date: Date): string {
 
 export function shouldShowDateSeparator(msgs: ChatMessage[], index: number): boolean {
   if (index === 0) return true;
-  const curr = new Date(msgs[index].time).getDate();
-  const prev = new Date(msgs[index - 1].time).getDate();
-  return curr !== prev;
+  const curr = parseChatTime(msgs[index].time);
+  const prev = parseChatTime(msgs[index - 1].time);
+  if (curr === null || prev === null) return false;
+  return curr.getDate() !== prev.getDate() || curr.getMonth() !== prev.getMonth() || curr.getFullYear() !== prev.getFullYear();
+}
+
+function parseChatTime(time: string): Date | null {
+  if (!time) return null;
+  const d = new Date(time);
+  if (!isNaN(d.getTime())) return d;
+  return null;
 }
 
 export function shouldGroupWithPrevious(msgs: ChatMessage[], index: number): boolean {
@@ -40,8 +48,10 @@ export function shouldGroupWithPrevious(msgs: ChatMessage[], index: number): boo
   const curr = msgs[index];
   const prev = msgs[index - 1];
   if (curr.from !== prev.from) return false;
-  const diff = new Date(curr.time).getTime() - new Date(prev.time).getTime();
-  return diff < GROUP_MS;
+  const currDate = parseChatTime(curr.time);
+  const prevDate = parseChatTime(prev.time);
+  if (currDate === null || prevDate === null) return false;
+  return currDate.getTime() - prevDate.getTime() < GROUP_MS;
 }
 
 export function getChatInitials(name: string): string {

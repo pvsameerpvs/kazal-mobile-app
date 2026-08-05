@@ -21,7 +21,7 @@ import {
 } from '@/components';
 import { quickAccess, opportunities } from '@/data';
 
-const EXPANDED = 0.55;
+const EXPANDED = 0.40;
 const COLLAPSED = 0.2;
 
 export default function Home() {
@@ -42,6 +42,10 @@ export default function Home() {
     height: interpolate(scrollY.value, [0, range], [maxH, minH], Extrapolation.CLAMP),
   }));
 
+  const ctaStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scrollY.value, [0, 100], [1, 0], Extrapolation.CLAMP),
+  }));
+
   const openOpportunity = (id: string) =>
     router.push({ pathname: '/opportunity/[id]', params: { id } });
 
@@ -49,7 +53,7 @@ export default function Home() {
     <Screen scroll={false} contentStyle={styles.content}>
       {/* Portion one — collapses 55% → 20% then pins */}
       <Animated.View style={[styles.header, { top: -insets.top }, headerStyle]}>
-        <HomeHero />
+        <HomeHero ctaStyle={ctaStyle} />
       </Animated.View>
 
       {/* Portion two — scrolls under the pinned header */}

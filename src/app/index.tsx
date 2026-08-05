@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { Colors, Gradients, Spacing } from '@/theme';
-import { GlowBackground, Logo, Skyline, Txt } from '@/components';
-import { company } from '@/data';
+import { GlowBackground, Logo, Skyline, Txt } from "@/components";
+import { company } from "@/data";
+import { Colors, Gradients, Spacing } from "@/theme";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { useCallback, useEffect, useRef } from "react";
+import { Animated, Easing, Pressable, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Splash() {
   const router = useRouter();
@@ -15,25 +15,51 @@ export default function Splash() {
   const rise = useRef(new Animated.Value(20)).current;
   const scale = useRef(new Animated.Value(0.9)).current;
 
-  const enter = useCallback(() => router.replace('/(tabs)/home'), [router]);
+  const enter = useCallback(() => router.replace("/(tabs)/home"), [router]);
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(fade, { toValue: 1, duration: 900, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-      Animated.timing(rise, { toValue: 0, duration: 900, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-      Animated.spring(scale, { toValue: 1, friction: 6, tension: 40, useNativeDriver: true }),
+      Animated.timing(fade, {
+        toValue: 1,
+        duration: 900,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(rise, {
+        toValue: 0,
+        duration: 900,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.spring(scale, {
+        toValue: 1,
+        friction: 6,
+        tension: 40,
+        useNativeDriver: true,
+      }),
     ]).start();
     const t = setTimeout(enter, 2600);
     return () => clearTimeout(t);
   }, [enter, fade, rise, scale]);
 
   return (
-    <Pressable style={[styles.root, { paddingTop: insets.top }]} onPress={enter}>
-      <LinearGradient colors={Gradients.screen} style={StyleSheet.absoluteFill} />
+    <Pressable
+      style={[styles.root, { paddingTop: insets.top }]}
+      onPress={enter}
+    >
+      <LinearGradient
+        colors={Gradients.screen}
+        style={StyleSheet.absoluteFill}
+      />
       <GlowBackground />
       <Skyline height={200} opacity={0.45} />
 
-      <Animated.View style={[styles.center, { opacity: fade, transform: [{ translateY: rise }] }]}>
+      <Animated.View
+        style={[
+          styles.center,
+          { opacity: fade, transform: [{ translateY: rise }] },
+        ]}
+      >
         <Animated.View style={[styles.logoRing, { transform: [{ scale }] }]}>
           <Logo size={80} />
         </Animated.View>
@@ -46,10 +72,18 @@ export default function Splash() {
         </Txt>
       </Animated.View>
 
-      <Animated.View style={[styles.footer, { bottom: Math.max(insets.bottom, 56), opacity: fade }]}>
+      <Animated.View
+        style={[
+          styles.footer,
+          { bottom: Math.max(insets.bottom, 56), opacity: fade },
+        ]}
+      >
         <View style={styles.trustRow}>
           <Ionicons name="sparkles-outline" size={14} color={Colors.cyan} />
-          <Txt variant="caption" style={{ color: Colors.cyan, letterSpacing: 0.5 }}>
+          <Txt
+            variant="caption"
+            style={{ color: Colors.cyan, letterSpacing: 0.5 }}
+          >
             {company.slogan}
           </Txt>
         </View>
@@ -62,24 +96,29 @@ export default function Splash() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: Colors.bg, alignItems: 'center', justifyContent: 'center' },
-  center: { alignItems: 'center', paddingHorizontal: Spacing.xl },
+  root: {
+    flex: 1,
+    backgroundColor: Colors.bg,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  center: { alignItems: "center", paddingHorizontal: Spacing.xl },
   logoRing: {
     width: 132,
     height: 132,
     borderRadius: 66,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: Colors.borderAccent,
-    backgroundColor: 'rgba(43,210,255,0.04)',
+    backgroundColor: "rgba(43,210,255,0.04)",
     marginBottom: Spacing.xxl,
     shadowColor: Colors.glowCyan,
     shadowOpacity: 0.6,
     shadowRadius: 30,
     shadowOffset: { width: 0, height: 0 },
   },
-  name: { letterSpacing: 0.5, textAlign: 'center', fontSize: 30 },
+  name: { letterSpacing: 0.5, textAlign: "center", fontSize: 30 },
   divider: {
     width: 54,
     height: 3,
@@ -91,8 +130,8 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 0 },
   },
-  tagline: { color: Colors.textSecondary, textAlign: 'center', fontSize: 13 },
-  footer: { position: 'absolute', alignItems: 'center', gap: Spacing.md },
-  trustRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  tagline: { color: Colors.textSecondary, textAlign: "center", fontSize: 13 },
+  footer: { position: "absolute", alignItems: "center", gap: Spacing.md },
+  trustRow: { flexDirection: "row", alignItems: "center", gap: 6 },
   tap: { color: Colors.textMuted, letterSpacing: 1 },
 });

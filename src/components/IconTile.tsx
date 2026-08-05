@@ -35,6 +35,7 @@ export function IconTile({
       ]}
     >
       <LinearGradient colors={Gradients.ctaSoft} style={[StyleSheet.absoluteFill, { borderRadius: Radius.md }]} />
+      <View pointerEvents="none" style={[styles.highlight, { borderRadius: Radius.md }]} />
       <Icon icon={icon} size={iconSize} color={color} />
     </View>
   );
@@ -47,5 +48,13 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: Colors.borderAccent,
     overflow: 'hidden',
+  },
+  highlight: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.18)',
   },
 });

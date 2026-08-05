@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { View, StyleSheet, useWindowDimensions, Modal, Pressable, ScrollView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { Colors, Radius, Spacing, Type } from '@/theme';
+import { Colors, Radius, Spacing } from '@/theme';
 import { Screen, TopBar, GlassCard, Button, Field, SelectField, Skyline, Txt } from '@/components';
 import { company, services } from '@/data';
 
@@ -23,7 +22,6 @@ const contacts: Contact[] = [
 ];
 
 export default function ContactScreen() {
-  const router = useRouter();
   const { width } = useWindowDimensions();
   const cardWidth = (width - Spacing.xl * 2 - Spacing.md) / 2;
   const [name, setName] = useState('');

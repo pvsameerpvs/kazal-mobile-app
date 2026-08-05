@@ -38,6 +38,7 @@ export function GlassCard({ children, style, padded = true, accent = false, onPr
         end={{ x: 1, y: 1 }}
         style={[StyleSheet.absoluteFill, { borderRadius: radius }]}
       />
+      <View pointerEvents="none" style={[styles.highlight, { borderRadius: radius }]} />
       <View style={padded ? styles.padded : undefined}>{children}</View>
     </Container>
   );
@@ -56,6 +57,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 22,
   },
+  highlight: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+  },
   padded: { padding: Spacing.lg },
-  pressed: { opacity: 0.88, transform: [{ scale: 0.97 }] },
+  pressed: { opacity: 0.9, transform: [{ scale: 0.96 }] },
 });

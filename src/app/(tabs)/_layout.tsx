@@ -1,11 +1,12 @@
 import { forwardRef, useEffect } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Tabs, TabSlot, TabList, TabTrigger, TabTriggerSlotProps } from 'expo-router/ui';
 import { Href, useSegments } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Colors, Radius, Spacing } from '@/theme';
+import { Colors, Radius, Spacing, Gradients } from '@/theme';
 import { Txt } from '@/components';
 
 type TabDef = {
@@ -31,34 +32,44 @@ type ButtonProps = TabTriggerSlotProps & {
 };
 
 const TabButton = forwardRef<View, ButtonProps>(({ icon, active, label, isFocused, ...props }, ref) => {
-  const scale = useSharedValue(isFocused ? 1.08 : 0.95);
-  const glowOpacity = useSharedValue(isFocused ? 1 : 0);
-  const glowScale = useSharedValue(isFocused ? 1 : 0.8);
+  const bgOpacity = useSharedValue(isFocused ? 1 : 0);
+  const bgScale = useSharedValue(isFocused ? 1 : 0.8);
+  const iconScale = useSharedValue(isFocused ? 1 : 0.92);
 
   useEffect(() => {
-    scale.value = withSpring(isFocused ? 1.08 : 0.95, { damping: 16, stiffness: 200 });
-    glowOpacity.value = withSpring(isFocused ? 1 : 0, { damping: 18, stiffness: 180 });
-    glowScale.value = withSpring(isFocused ? 1 : 0.8, { damping: 14, stiffness: 160 });
-  }, [glowOpacity, glowScale, isFocused, scale]);
+    bgOpacity.value = withSpring(isFocused ? 1 : 0, { damping: 20, stiffness: 220 });
+    bgScale.value = withSpring(isFocused ? 1 : 0.8, { damping: 20, stiffness: 220 });
+    iconScale.value = withSpring(isFocused ? 1 : 0.92, { damping: 14, stiffness: 200 });
+  }, [isFocused]);
 
-  const iconStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
+  const bgStyle = useAnimatedStyle(() => ({
+    opacity: bgOpacity.value,
+    transform: [{ scale: bgScale.value }],
   }));
 
-  const glowStyle = useAnimatedStyle(() => ({
-    opacity: glowOpacity.value,
-    transform: [{ scale: glowScale.value }],
+  const iconAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: iconScale.value }],
   }));
 
   return (
     <Pressable ref={ref} {...props} style={styles.tab}>
-      <Animated.View style={[styles.iconWrap, iconStyle]}>
-        <Animated.View style={[styles.glow, glowStyle]} />
-        <Ionicons name={isFocused ? active : icon} size={22} color={isFocused ? Colors.cyan : Colors.textMuted} />
+      <Animated.View style={[styles.iconWrap, iconAnimStyle]}>
+        <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.activeBg, bgStyle]}>
+          <LinearGradient colors={Gradients.cta} style={StyleSheet.absoluteFill} />
+        </Animated.View>
+        <Ionicons
+          name={isFocused ? active : icon}
+          size={22}
+          color={isFocused ? Colors.white : Colors.textMuted}
+        />
       </Animated.View>
       <Txt
         variant="caption"
-        style={{ color: isFocused ? Colors.cyan : Colors.textMuted, fontWeight: isFocused ? '700' : '500', fontSize: 10 }}
+        style={{
+          color: isFocused ? Colors.white : Colors.textMuted,
+          fontWeight: isFocused ? '700' : '500',
+          fontSize: 10,
+        }}
       >
         {label}
       </Txt>
@@ -75,7 +86,9 @@ export default function TabsLayout() {
   return (
     <Tabs style={styles.root}>
       <TabSlot />
-      <TabList style={[styles.bar, { bottom: Math.max(insets.bottom, 16) }, hideTabBar && styles.hidden]}>
+      <TabList
+        style={[styles.bar, { bottom: Math.max(insets.bottom - 4, 8) }, hideTabBar && styles.hidden]}
+      >
         {TABS.map((t) => (
           <TabTrigger key={t.name} name={t.name} href={t.href} asChild>
             <TabButton icon={t.icon} active={t.active} label={t.label} />
@@ -90,35 +103,39 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: Colors.bg },
   bar: {
     position: 'absolute',
-    left: Spacing.lg,
-    right: Spacing.lg,
+    left: Spacing.md,
+    right: Spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: Radius.xl + 2,
-    paddingVertical: 6,
-    paddingHorizontal: 6,
+    borderRadius: Radius.xl + 6,
+    paddingVertical: 4,
+    paddingHorizontal: 4,
+    backgroundColor: 'rgba(11,20,36,0.85)',
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: Colors.glassHairline,
+    borderColor: 'rgba(43,210,255,0.08)',
+    shadowColor: Colors.glowCyan,
+    shadowOpacity: 0.08,
+    shadowRadius: 28,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 16,
   },
   hidden: { opacity: 0, pointerEvents: 'none' },
-  tab: { flex: 1, alignItems: 'center', gap: 2, paddingVertical: 6 },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 2,
+    paddingVertical: 6,
+  },
+  activeBg: {
+    borderRadius: Radius.md,
+    overflow: 'hidden',
+  },
   iconWrap: {
     width: 44,
     height: 36,
     borderRadius: Radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'visible',
-  },
-  glow: {
-    position: 'absolute',
-    width: 44,
-    height: 36,
-    borderRadius: Radius.md,
-    backgroundColor: 'rgba(43,210,255,0.12)',
-    shadowColor: Colors.glowCyan,
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 0 },
   },
 });

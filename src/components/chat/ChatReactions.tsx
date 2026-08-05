@@ -1,7 +1,6 @@
-import { View, StyleSheet } from 'react-native';
-import { TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { Colors, Radius } from '@/theme';
+import { Colors } from '@/theme';
 import { Txt } from '@/components';
 import { CHAT_REACTIONS } from '@/constants/chat';
 

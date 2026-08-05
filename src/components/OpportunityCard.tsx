@@ -5,7 +5,7 @@ import { GlassCard } from './GlassCard';
 import { StatusBadge } from './StatusBadge';
 import { Txt } from './Txt';
 
-/** Clean, scannable opportunity row — title, provider, metric + validity, status. */
+/** Simple, scannable opportunity card — title, provider, metric + validity, status. */
 export function OpportunityCard({ opp, onPress }: { opp: Opportunity; onPress?: () => void }) {
   return (
     <GlassCard onPress={onPress} style={styles.card}>
@@ -15,13 +15,13 @@ export function OpportunityCard({ opp, onPress }: { opp: Opportunity; onPress?: 
         </Txt>
         <StatusBadge status={opp.status} />
       </View>
-      <Txt variant="body" style={styles.provider}>
+      <Txt variant="body" style={styles.provider} numberOfLines={1}>
         {opp.provider}
       </Txt>
       <View style={styles.metaRow}>
         {opp.metric && (
           <Txt variant="label" style={{ color: Colors.cyan }}>
-            {opp.metric.label} {opp.metric.value}
+            {opp.metric.label}: {opp.metric.value}
           </Txt>
         )}
         {opp.validity && (
@@ -35,15 +35,15 @@ export function OpportunityCard({ opp, onPress }: { opp: Opportunity; onPress?: 
 }
 
 const styles = StyleSheet.create({
-  card: { marginBottom: Spacing.md },
+  card: { marginBottom: Spacing.lg, paddingVertical: Spacing.sm },
   topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: Spacing.sm },
   title: { flex: 1 },
-  provider: { marginTop: 4, color: Colors.textSecondary },
+  provider: { marginTop: Spacing.sm, color: Colors.textSecondary },
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: Spacing.md,
+    marginTop: Spacing.lg,
     gap: Spacing.sm,
   },
 });

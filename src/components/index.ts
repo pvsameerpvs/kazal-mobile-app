@@ -13,6 +13,7 @@ export { SectionHeader } from './SectionHeader';
 export { Skyline } from './Skyline';
 export { HomeHero } from './home';
 export { ServiceCard } from './ServiceCard';
+export { SubCategoryCard } from './SubCategoryCard';
 export { OpportunityCard } from './OpportunityCard';
 export { ScreenTitle } from './ScreenTitle';
 export { Field, SelectField } from './Field';

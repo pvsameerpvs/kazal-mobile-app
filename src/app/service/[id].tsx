@@ -16,15 +16,16 @@ import {
   Txt,
 } from '@/components';
 import { services, opportunities } from '@/data';
+import { useChatGate } from '@/hooks';
 
 export default function ServiceDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const service = services.find((s) => s.id === id) ?? services[0];
+  const chatGate = useChatGate();
 
-  const inquire = (label: string) =>
-    router.push({ pathname: '/(tabs)/chat', params: { context: 'service', label } });
+  const inquire = (label: string) => chatGate('service', label);
 
   const keyword = service.title.split(' ')[0].toLowerCase();
   const related = opportunities

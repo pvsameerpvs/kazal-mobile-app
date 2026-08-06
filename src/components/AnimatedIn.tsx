@@ -15,7 +15,7 @@ export function AnimatedIn({ children, index = 0, delay = 80 }: Props) {
     const d = index * delay;
     opacity.value = withDelay(d, withTiming(1, { duration: 450 }));
     translateY.value = withDelay(d, withSpring(0, { damping: 22, stiffness: 160 }));
-  }, []);
+  }, [index, delay, opacity, translateY]);
 
   const style = useAnimatedStyle(() => ({
     opacity: opacity.value,

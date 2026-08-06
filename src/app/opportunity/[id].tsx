@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radius, Spacing } from '@/theme';
 import { Screen, TopBar, GlassCard, Button, StatusBadge, Txt } from '@/components';
 import { opportunities } from '@/data';
+import { useChatGate } from '@/hooks';
 
 export default function OpportunityDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const router = useRouter();
   const opp = opportunities.find((o) => o.id === id) ?? opportunities[0];
   const [bookmarked, setBookmarked] = useState(false);
+  const chatGate = useChatGate();
+
+  const inquire = () => chatGate('opportunity', opp.title);
 
   const rows: { label: string; value: string }[] = [
     { label: 'Issuing Bank', value: opp.issuingBank },
@@ -64,13 +67,13 @@ export default function OpportunityDetail() {
         <Button
           label="Inquire Now"
           icon="document-text-outline"
-          onPress={() => router.push({ pathname: '/(tabs)/chat', params: { context: 'opportunity', label: opp.title } })}
+          onPress={inquire}
         />
         <Button
           label="Chat About This"
           variant="secondary"
           icon="chatbubble-ellipses-outline"
-          onPress={() => router.push({ pathname: '/(tabs)/chat', params: { context: 'opportunity', label: opp.title } })}
+          onPress={inquire}
         />
       </View>
     </Screen>

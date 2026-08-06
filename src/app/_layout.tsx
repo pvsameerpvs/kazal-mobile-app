@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Colors } from '@/theme';
+import { AuthProvider } from '@/providers/AuthProvider';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 
 const navTheme = {
@@ -22,22 +23,25 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: Colors.bg }}>
       <SafeAreaProvider>
-        <ThemeProvider>
-          <NavThemeProvider value={navTheme}>
-            <StatusBar style="light" />
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                contentStyle: { backgroundColor: Colors.bg },
-                animation: 'slide_from_right',
-              }}
-            >
-              <Stack.Screen name="index" options={{ animation: 'fade' }} />
-              <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
-              <Stack.Screen name="login" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-            </Stack>
-          </NavThemeProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <NavThemeProvider value={navTheme}>
+              <StatusBar style="light" />
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: { backgroundColor: Colors.bg },
+                  animation: 'slide_from_right',
+                }}
+              >
+                <Stack.Screen name="index" options={{ animation: 'fade' }} />
+                <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
+                <Stack.Screen name="login" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+                <Stack.Screen name="auth/callback" options={{ animation: 'fade' }} />
+              </Stack>
+            </NavThemeProvider>
+          </ThemeProvider>
+        </AuthProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

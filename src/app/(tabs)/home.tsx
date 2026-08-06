@@ -20,6 +20,7 @@ import {
   Txt,
 } from '@/components';
 import { quickAccess, opportunities } from '@/data';
+import { useChatGate } from '@/hooks';
 
 const EXPANDED = 0.40;
 const COLLAPSED = 0.2;
@@ -29,6 +30,7 @@ export default function Home() {
   const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
+  const chatGate = useChatGate();
 
   const maxH = height * EXPANDED + insets.top;
   const minH = height * COLLAPSED + insets.top;
@@ -69,7 +71,11 @@ export default function Home() {
           </Txt>
           <View style={styles.quickRow}>
             {quickAccess.map((q) => (
-              <GlassCard key={q.id} onPress={() => router.push(q.href)} style={styles.quickCard}>
+              <GlassCard
+                key={q.id}
+                onPress={() => (q.id === 'chat' ? chatGate() : router.push(q.href))}
+                style={styles.quickCard}
+              >
                 <View style={styles.quickInner}>
                   <IconTile icon={q.icon} size={44} iconSize={20} glowing={false} />
                   <Txt variant="bodyStrong" numberOfLines={1}>

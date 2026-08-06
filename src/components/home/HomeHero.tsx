@@ -3,7 +3,6 @@ import { Colors, Spacing } from "@/theme";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { useMemo } from "react";
 import {
   StyleProp,
   StyleSheet,
@@ -15,14 +14,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button } from "../Button";
 import { Txt } from "../Txt";
 
-const greeting = () => {
-  const h = new Date().getHours();
-  if (h < 12) return "Good Morning";
-  if (h < 17) return "Good Afternoon";
-  if (h < 22) return "Good Evening";
-  return "Good Night";
-};
-
 type Props = {
   ctaStyle?: StyleProp<ViewStyle>;
 };
@@ -30,7 +21,6 @@ type Props = {
 /** Hero image that fills its parent (height animated by the collapsing header). */
 export function HomeHero({ ctaStyle }: Props) {
   const router = useRouter();
-  const greet = useMemo(greeting, []);
   const insets = useSafeAreaInsets();
 
   return (
@@ -96,7 +86,6 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "rgba(255,255,255,0.18)",
   },
-  slogan: { fontSize: 28, lineHeight: 34, letterSpacing: -0.4 },
   trust: { marginTop: Spacing.md, color: Colors.textSecondary },
   ctaButton: {
     width: "85%",

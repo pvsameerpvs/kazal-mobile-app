@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -6,11 +6,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Gradients, Radius, Spacing, Type } from '@/theme';
 import { GlowBackground, Logo, Txt } from '@/components';
+import { isSupabaseConfigured } from '@/api/supabase';
+import { useAuth } from '@/hooks';
 
 export default function Login() {
   const router = useRouter();
   const params = useLocalSearchParams<{ context?: string; id?: string; label?: string }>();
+  const { status, signInWithGoogle } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const contextLabel = useMemo(() => {
     if (params.context === 'service' && params.label) return params.label;
@@ -23,13 +27,22 @@ export default function Login() {
     if (params.context) chatParams.context = params.context;
     if (params.label) chatParams.label = params.label;
     return () => router.replace({ pathname: '/(tabs)/chat', params: chatParams });
-  }, [params.context, params.label]);
+  }, [params.context, params.label, router]);
 
-  const signInWithGoogle = () => {
+  useEffect(() => {
+    if (status === 'signedIn') navigate();
+  }, [status, navigate]);
+
+  const signInWithGooglePress = async () => {
+    setError(null);
     setLoading(true);
-    setTimeout(() => {
-      navigate();
-    }, 1200);
+    try {
+      await signInWithGoogle();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Google sign-in failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -73,9 +86,12 @@ export default function Login() {
 
           {/* Google Sign In */}
           <Pressable
-            style={({ pressed }) => [styles.googleBtn, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
-            disabled={loading}
-            onPress={signInWithGoogle}
+            style={({ pressed }) => [styles.googleBtn, (loading || !isSupabaseConfigured) && { opacity: 0.55 }, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
+            disabled={loading || !isSupabaseConfigured}
+            onPress={signInWithGooglePress}
+            accessibilityRole="button"
+            accessibilityLabel="Continue with Google"
+            accessibilityState={{ disabled: loading || !isSupabaseConfigured, busy: loading }}
           >
             <View style={styles.googleInner}>
               {loading ? (
@@ -88,6 +104,25 @@ export default function Login() {
               )}
             </View>
           </Pressable>
+
+          {!isSupabaseConfigured ? (
+            <View style={styles.errorRow} accessibilityRole="alert">
+              <Ionicons name="cloud-offline-outline" size={15} color={Colors.textMuted} />
+              <Txt variant="caption" style={{ color: Colors.textSecondary, flex: 1 }}>
+                Sign-in is not configured yet. Please check back soon.
+              </Txt>
+            </View>
+          ) : null}
+
+          {/* Error */}
+          {error ? (
+            <View style={styles.errorRow} accessibilityRole="alert">
+              <Ionicons name="alert-circle" size={15} color={Colors.sold} />
+              <Txt variant="caption" style={{ color: Colors.sold, flex: 1 }}>
+                {error}
+              </Txt>
+            </View>
+          ) : null}
 
           {/* Divider */}
           <View style={styles.dividerRow}>
@@ -168,6 +203,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.sm,
     height: 54,
+  },
+  errorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+    alignSelf: 'stretch',
+    marginTop: Spacing.md,
+    padding: Spacing.md,
+    borderRadius: Radius.md,
+    backgroundColor: 'rgba(224,106,106,0.10)',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(224,106,106,0.35)',
   },
   dividerRow: {
     flexDirection: 'row',

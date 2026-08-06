@@ -18,6 +18,7 @@ export { OpportunityCard } from './OpportunityCard';
 export { ScreenTitle } from './ScreenTitle';
 export { Field, SelectField } from './Field';
 export { Txt } from './Txt';
+export { AuthCard } from './AuthCard';
 
 export {
   ChatHeader,

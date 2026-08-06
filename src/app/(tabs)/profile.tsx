@@ -2,8 +2,9 @@ import { View, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, Radius, Spacing } from '@/theme';
-import { Screen, AnimatedIn, GlassCard, Button, Logo, Txt } from '@/components';
+import { Screen, AnimatedIn, GlassCard, Logo, Txt, AuthCard } from '@/components';
 import { profile } from '@/data';
+import { useAuth, useChatGate } from '@/hooks';
 
 function QuickAction({
   icon,
@@ -30,6 +31,16 @@ function QuickAction({
 
 export default function Profile() {
   const router = useRouter();
+  const { status, user, signOut } = useAuth();
+  const chatGate = useChatGate();
+
+  const signedIn = status === 'signedIn';
+  const authName =
+    user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? null;
+  const avatarUrl =
+    user?.user_metadata?.avatar_url ??
+    user?.identities?.[0]?.identity_data?.avatar_url ??
+    null;
 
   return (
     <Screen contentStyle={styles.content}>
@@ -53,25 +64,37 @@ export default function Profile() {
         </GlassCard>
       </AnimatedIn>
 
+      {/* Signed-in user */}
+      {signedIn && (
+        <AnimatedIn index={1}>
+          <AuthCard
+            name={authName}
+            email={user?.email ?? null}
+            avatarUrl={avatarUrl}
+            onSignOut={() => signOut()}
+          />
+        </AnimatedIn>
+      )}
+
       {/* Quick actions */}
-      <AnimatedIn index={1}>
+      <AnimatedIn index={2}>
         <View style={styles.actions}>
           <QuickAction icon="call-outline" label="Call" color={Colors.teal} onPress={() => router.push('/contact')} />
           <QuickAction icon="logo-whatsapp" label="WhatsApp" color="#25D366" onPress={() => router.push('/contact')} />
           <QuickAction icon="mail-outline" label="Email" color={Colors.cyan} onPress={() => router.push('/contact')} />
-          <QuickAction icon="chatbubbles-outline" label="Chat" color={Colors.blue} onPress={() => router.push('/(tabs)/chat')} />
+          <QuickAction icon="chatbubbles-outline" label="Chat" color={Colors.blue} onPress={() => chatGate()} />
         </View>
       </AnimatedIn>
 
       {/* Intro */}
-      <AnimatedIn index={2}>
+      <AnimatedIn index={3}>
         <Txt variant="body" style={styles.intro}>
           {profile.intro}
         </Txt>
       </AnimatedIn>
 
       {/* Key points */}
-      <AnimatedIn index={3}>
+      <AnimatedIn index={4}>
         <Txt variant="h3" style={styles.sectionLabel}>
           What We Do
         </Txt>
@@ -90,7 +113,7 @@ export default function Profile() {
       </AnimatedIn>
 
       {/* Markets */}
-      <AnimatedIn index={4}>
+      <AnimatedIn index={5}>
         <Txt variant="h3" style={styles.sectionLabel}>
           Markets
         </Txt>
@@ -104,15 +127,6 @@ export default function Profile() {
             </View>
           ))}
         </View>
-      </AnimatedIn>
-
-      <AnimatedIn index={5}>
-        <Button
-          label="Contact Us"
-          icon="chatbubble-ellipses-outline"
-          onPress={() => router.push('/contact')}
-          style={styles.contactBtn}
-        />
       </AnimatedIn>
     </Screen>
   );
@@ -184,5 +198,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  contactBtn: { marginTop: Spacing.xxl },
 });

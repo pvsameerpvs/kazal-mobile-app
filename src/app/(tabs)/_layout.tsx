@@ -3,11 +3,12 @@ import { View, Pressable, StyleSheet } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Tabs, TabSlot, TabList, TabTrigger, TabTriggerSlotProps } from 'expo-router/ui';
-import { Href, useSegments } from 'expo-router';
+import { Href, useRouter, useSegments } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, Radius, Spacing, Gradients } from '@/theme';
 import { Txt } from '@/components';
+import { useAuth } from '@/hooks';
 
 type TabDef = {
   name: string;
@@ -29,53 +30,66 @@ type ButtonProps = TabTriggerSlotProps & {
   icon: keyof typeof Ionicons.glyphMap;
   active: keyof typeof Ionicons.glyphMap;
   label: string;
+  requireAuth?: boolean;
 };
 
-const TabButton = forwardRef<View, ButtonProps>(({ icon, active, label, isFocused, ...props }, ref) => {
-  const bgOpacity = useSharedValue(isFocused ? 1 : 0);
-  const bgScale = useSharedValue(isFocused ? 1 : 0.8);
-  const iconScale = useSharedValue(isFocused ? 1 : 0.92);
+const TabButton = forwardRef<View, ButtonProps>(
+  ({ icon, active, label, isFocused, onPress, requireAuth, ...props }, ref) => {
+    const { status } = useAuth();
+    const router = useRouter();
+    const bgOpacity = useSharedValue(isFocused ? 1 : 0);
+    const bgScale = useSharedValue(isFocused ? 1 : 0.8);
+    const iconScale = useSharedValue(isFocused ? 1 : 0.92);
 
-  useEffect(() => {
-    bgOpacity.value = withSpring(isFocused ? 1 : 0, { damping: 20, stiffness: 220 });
-    bgScale.value = withSpring(isFocused ? 1 : 0.8, { damping: 20, stiffness: 220 });
-    iconScale.value = withSpring(isFocused ? 1 : 0.92, { damping: 14, stiffness: 200 });
-  }, [isFocused]);
+    useEffect(() => {
+      bgOpacity.value = withSpring(isFocused ? 1 : 0, { damping: 20, stiffness: 220 });
+      bgScale.value = withSpring(isFocused ? 1 : 0.8, { damping: 20, stiffness: 220 });
+      iconScale.value = withSpring(isFocused ? 1 : 0.92, { damping: 14, stiffness: 200 });
+    }, [isFocused, bgOpacity, bgScale, iconScale]);
 
-  const bgStyle = useAnimatedStyle(() => ({
-    opacity: bgOpacity.value,
-    transform: [{ scale: bgScale.value }],
-  }));
+    const bgStyle = useAnimatedStyle(() => ({
+      opacity: bgOpacity.value,
+      transform: [{ scale: bgScale.value }],
+    }));
 
-  const iconAnimStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: iconScale.value }],
-  }));
+    const iconAnimStyle = useAnimatedStyle(() => ({
+      transform: [{ scale: iconScale.value }],
+    }));
 
-  return (
-    <Pressable ref={ref} {...props} style={styles.tab}>
-      <Animated.View style={[styles.iconWrap, iconAnimStyle]}>
-        <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.activeBg, bgStyle]}>
-          <LinearGradient colors={Gradients.cta} style={StyleSheet.absoluteFill} />
+    const handlePress = (event: Parameters<NonNullable<ButtonProps['onPress']>>[0]) => {
+      if (requireAuth && status !== 'signedIn') {
+        router.push('/login');
+        return;
+      }
+      onPress?.(event);
+    };
+
+    return (
+      <Pressable ref={ref} {...props} onPress={handlePress} style={styles.tab}>
+        <Animated.View style={[styles.iconWrap, iconAnimStyle]}>
+          <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.activeBg, bgStyle]}>
+            <LinearGradient colors={Gradients.cta} style={StyleSheet.absoluteFill} />
+          </Animated.View>
+          <Ionicons
+            name={isFocused ? active : icon}
+            size={22}
+            color={isFocused ? Colors.white : Colors.textMuted}
+          />
         </Animated.View>
-        <Ionicons
-          name={isFocused ? active : icon}
-          size={22}
-          color={isFocused ? Colors.white : Colors.textMuted}
-        />
-      </Animated.View>
-      <Txt
-        variant="caption"
-        style={{
-          color: isFocused ? Colors.white : Colors.textMuted,
-          fontWeight: isFocused ? '700' : '500',
-          fontSize: 10,
-        }}
-      >
-        {label}
-      </Txt>
-    </Pressable>
-  );
-});
+        <Txt
+          variant="caption"
+          style={{
+            color: isFocused ? Colors.white : Colors.textMuted,
+            fontWeight: isFocused ? '700' : '500',
+            fontSize: 10,
+          }}
+        >
+          {label}
+        </Txt>
+      </Pressable>
+    );
+  },
+);
 TabButton.displayName = 'TabButton';
 
 export default function TabsLayout() {
@@ -91,7 +105,12 @@ export default function TabsLayout() {
       >
         {TABS.map((t) => (
           <TabTrigger key={t.name} name={t.name} href={t.href} asChild>
-            <TabButton icon={t.icon} active={t.active} label={t.label} />
+            <TabButton
+              icon={t.icon}
+              active={t.active}
+              label={t.label}
+              requireAuth={t.name === 'chat'}
+            />
           </TabTrigger>
         ))}
       </TabList>

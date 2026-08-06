@@ -1,11 +1,10 @@
 import { company } from "@/data";
-import { Colors, Radius, Spacing } from "@/theme";
+import { Colors, Spacing } from "@/theme";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import {
-  Pressable,
   StyleProp,
   StyleSheet,
   View,
@@ -13,6 +12,7 @@ import {
 } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Button } from "../Button";
 import { Txt } from "../Txt";
 
 const greeting = () => {
@@ -54,7 +54,7 @@ export function HomeHero({ ctaStyle }: Props) {
 
       <View style={styles.topRow}>
         <View style={styles.greetBlock}>
-          <Txt variant="h2">Aviation Tourism</Txt>
+          <Txt variant="h2">Aircraft financing</Txt>
           <Txt variant="body" style={styles.trust}>
             We at {company.name} offer complete aviation needs and services. We
             can provide you with the aircraft you need, whether Boeing or
@@ -64,21 +64,12 @@ export function HomeHero({ ctaStyle }: Props) {
       </View>
 
       <Animated.View style={ctaStyle}>
-        <Pressable
-          style={({ pressed }) => [
-            styles.ctaButton,
-            pressed && styles.linkPressed,
-          ]}
+        <Button
+          label="Learn More"
+          variant="secondary"
           onPress={() => router.push("/(tabs)/services")}
-          accessibilityRole="button"
-          accessibilityLabel="Learn more about our services"
-        >
-          <View style={styles.ctaContent}>
-            <Txt variant="bodyStrong" style={styles.linkText}>
-              Learn More
-            </Txt>
-          </View>
-        </Pressable>
+          style={styles.ctaButton}
+        />
       </Animated.View>
     </View>
   );
@@ -110,22 +101,6 @@ const styles = StyleSheet.create({
   ctaButton: {
     width: "85%",
     maxWidth: 300,
-    height: 72,
     alignSelf: "center",
-    borderRadius: Radius.lg,
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: Colors.borderAccent,
-    overflow: "hidden",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  linkPressed: { opacity: 0.9, transform: [{ scale: 0.99 }] },
-  linkText: { color: Colors.white, fontSize: 16, letterSpacing: 0.4 },
-  ctaContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: Spacing.xs,
-    paddingVertical: Spacing.sm,
   },
 });
